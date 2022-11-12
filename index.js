@@ -240,7 +240,16 @@ const utcMinutes = () => {
 
 // client on ready
 client.on('ready', () => {
-    client.channels.cache.get('1040934854252040273').send(`Logged in as ${client.user.tag}!`);
+
+    if (process.env.CONTINENT === '18') {
+        // delete all previous messages in the channel
+        client.channels.cache.get('1040978360349765703').send(`Logged in as ${client.user.tag}!`);
+    }
+
+    if (process.env.CONTINENT === '45') {
+        // delete all messages in the channel
+        client.channels.cache.get('1040934854252040273').send(`Logged in as ${client.user.tag}!`);
+    }
 
     (async () => {
         try {
