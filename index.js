@@ -240,7 +240,7 @@ const utcMinutes = () => {
 
 // client on ready
 client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+    client.channels.cache.get('1040934854252040273').send(`Logged in as ${client.user.tag}!`);
 
     (async () => {
         try {
