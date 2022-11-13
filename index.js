@@ -128,7 +128,7 @@ function startWebsocket() {
             startPosition -= 8;
 
             // add delay of 1 second to prevent rate limiting
-            await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 3000) + 500));
+            await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 2000) + 500));
         }
 
         // send message to discord channel that the bot is done
@@ -158,7 +158,7 @@ function startWebsocket() {
         wsOpen = false;
         ws = null;
 
-        let randomTime = Math.floor(Math.random() * 150000) + 30000;
+        let randomTime = Math.floor(Math.random() * 300000) + 120000;
 
         // send message to discord channel that the bot is done and reseting in X minutes (randomTime)
         client.channels.cache.get(process.env.CHANNEL_ID).send(`------\n**INFO:** Resetting in ${Math.floor(randomTime / 60000)} minutes.\n------`);
