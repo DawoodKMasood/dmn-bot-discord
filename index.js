@@ -146,10 +146,6 @@ function startWebsocket() {
     ws.on('open', async function open() {
         wsOpen = true;
 
-        // delete all previous messages in the channel
-        client.channels.cache.get(process.env.CHANNEL_ID).bulkDelete(100);
-        client.channels.cache.get(process.env.CHANNEL_ID).send(`**${process.env.BOT_NAME} is searching Crystal Mines!** 🧐`);
-
         search();
     });
 
@@ -159,9 +155,6 @@ function startWebsocket() {
         ws = null;
 
         let randomTime = Math.floor(Math.random() * 300000) + 120000;
-
-        // send message to discord channel that the bot is done and reseting in X minutes (randomTime)
-        client.channels.cache.get(process.env.CHANNEL_ID).send(`------\n**INFO:** Resetting in ${Math.floor(randomTime / 60000)} minutes.\n------`);
 
         // start websocket again
         setTimeout(startWebsocket, randomTime)
@@ -256,16 +249,10 @@ client.on('ready', () => {
 
     (async () => {
         try {
-            while (1) {
-                if (wsOpen === false) {
-                    // empty crystalMineLocations array
-                    crystalMineLocations.length = 0;
+            // empty crystalMineLocations array
+            crystalMineLocations.length = 0;
 
-                    startWebsocket();
-                }
-
-                await new Promise((resolve) => setTimeout(resolve, 10000));
-            }
+            startWebsocket();
         } catch (error) {
             console.log(error);
         }
