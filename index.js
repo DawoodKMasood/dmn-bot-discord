@@ -182,7 +182,7 @@ function startWebsocket() {
         wsOpen = false;
         ws = null;
 
-        let randomTime = Math.floor(Math.random() * 1000) + 10000;
+        let randomTime = Math.floor(Math.random() * 1000) + 5000;
 
         // start websocket again
         setTimeout(startWebsocket, randomTime)
