@@ -29,7 +29,7 @@ const client = new Client({
 });
 
 let startPosition = 4095;
-let endPosition = 4050;
+let endPosition = 0;
 let wsOpen = false;
 
 // get goblin locations from user input and send to discord
