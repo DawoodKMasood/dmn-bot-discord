@@ -40,11 +40,8 @@ client.on('messageCreate', message => {
         // get the crystal mine locations from crystalMineLocations
         const filteredCrystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.level === parseInt(level));
 
-        // sort the filtered crystal mine locations by Y coordinate
-        filteredCrystalMineLocations.sort((a, b) => a.location["Y"] - b.location["Y"]);
-
-        // sort the filtered crystal mine locations by X coordinate
-        filteredCrystalMineLocations.sort((a, b) => a.location["X"] - b.location["X"]);
+        // sort the filtered crystal mine locations by expired time
+        filteredCrystalMineLocations.sort((a, b) => b.expires - a.expires);
 
         // sort the filtered crystal mine locations by level
         filteredCrystalMineLocations.sort((a, b) => b.level - a.level);
@@ -53,8 +50,23 @@ client.on('messageCreate', message => {
 
         // loop through filtered crystal mine locations
         filteredCrystalMineLocations.forEach(crystalMineLocation => {
-            // append to messageToSend
-            messageToSend += crystalMineLocation !== undefined && `**X:** ${crystalMineLocation.location["X"]}, **Y:** ${crystalMineLocation.location["Y"]} | **Level:** ${crystalMineLocation.level}\n`;
+            let now = new Date().getTime();
+            let cmineExpiresData = crystalMineLocation.expires;
+
+            // get the time difference between now and the crystal mine location expires time
+            let timeDifference = cmineExpiresData.getTime() - now;
+
+            // format the time difference to hours
+            let hours = Math.floor(timeDifference / (1000 * 60 * 60));
+
+            // format the time difference to minutes
+            let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+
+            // if hour is greater than 30, then add the crystal mine location to the message
+            if (hours >= 30) {
+                // append to messageToSend
+                messageToSend += crystalMineLocation !== undefined && `**X:** ${crystalMineLocation.location["X"]}, **Y:** ${crystalMineLocation.location["Y"]} | **Level:** ${crystalMineLocation.level} - (${hours}H:${minutes}M)\n`;
+            }
         })
 
         // check if messageToSend is not empty
@@ -81,13 +93,31 @@ client.on('messageCreate', message => {
     if (message.content.startsWith('/cmine all') && (message.channel.id === process.env.CHANNEL_ID)) {
         let messageToSend = '';
 
-        // sort the crystal mine locations by level
+        // sort the filtered crystal mine locations by expired time
+        crystalMineLocations.sort((a, b) => b.expires - a.expires);
+
+        // sort the filtered crystal mine locations by level
         crystalMineLocations.sort((a, b) => b.level - a.level);
 
         // loop through crystal mine locations
         crystalMineLocations.forEach(crystalMineLocation => {
-            // append to messageToSend
-            messageToSend += crystalMineLocation !== undefined && `**X:** ${crystalMineLocation.location["X"]}, **Y:** ${crystalMineLocation.location["Y"]} | **Level:** ${crystalMineLocation.level}\n`;
+            let now = new Date().getTime();
+            let cmineExpiresData = crystalMineLocation.expires;
+
+            // get the time difference between now and the crystal mine location expires time
+            let timeDifference = cmineExpiresData.getTime() - now;
+
+            // format the time difference to hours
+            let hours = Math.floor(timeDifference / (1000 * 60 * 60));
+
+            // format the time difference to minutes
+            let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+
+            // if hour is greater than 30, then add the crystal mine location to the message
+            if (hours >= 30) {
+                // append to messageToSend
+                messageToSend += crystalMineLocation !== undefined && `**X:** ${crystalMineLocation.location["X"]}, **Y:** ${crystalMineLocation.location["Y"]} | **Level:** ${crystalMineLocation.level} - (${hours}H:${minutes}M)\n`;
+            }
         })
 
         // check if messageToSend is not empty
@@ -199,6 +229,7 @@ function startWebsocket() {
                         crystalMineLocations.push({
                             location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
                             level: object.level,
+                            expires: new Date(object.expired),
                         });
                     }
 
@@ -208,6 +239,7 @@ function startWebsocket() {
                         crystalMineLocations.push({
                             location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
                             level: object.level,
+                            expires: new Date(object.expired),
                         });
                     }
 
@@ -217,6 +249,7 @@ function startWebsocket() {
                         crystalMineLocations.push({
                             location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
                             level: object.level,
+                            expires: new Date(object.expired),
                         });
                     }
 
@@ -226,6 +259,7 @@ function startWebsocket() {
                         crystalMineLocations.push({
                             location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
                             level: object.level,
+                            expires: new Date(object.expired),
                         });
                     }
 
@@ -235,6 +269,7 @@ function startWebsocket() {
                         crystalMineLocations.push({
                             location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
                             level: object.level,
+                            expires: new Date(object.expired),
                         });
                     }
 
