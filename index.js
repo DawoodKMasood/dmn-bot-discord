@@ -28,16 +28,23 @@ const client = new Client({
 let startPosition = 4095;
 let endPosition = 0;
 let wsOpen = false;
+let loggedIn = false;
 
 // get crystal mine locations from user input and send to discord
 // user input format: /crystalmine level [level]
 client.on('messageCreate', message => {
-    if (message.content.startsWith('/cmine level')) {
+    if (message.content.startsWith('/cmine level') && (message.channel.id === '1040978360349765703' || message.channel.id === '1040934854252040273')) {
         // get the level from the user input
         const level = message.content.split(' ')[2];
 
         // get the crystal mine locations from crystalMineLocations
         const filteredCrystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.level === parseInt(level));
+
+        // sort the filtered crystal mine locations by Y coordinate
+        filteredCrystalMineLocations.sort((a, b) => a.location["Y"] - b.location["Y"]);
+
+        // sort the filtered crystal mine locations by X coordinate
+        filteredCrystalMineLocations.sort((a, b) => a.location["X"] - b.location["X"]);
 
         // sort the filtered crystal mine locations by level
         filteredCrystalMineLocations.sort((a, b) => b.level - a.level);
@@ -52,8 +59,17 @@ client.on('messageCreate', message => {
 
         // check if messageToSend is not empty
         if (messageToSend !== '') {
-            // send message to discord
-            message.channel.send(`-- **Crystal Mine Level ${level}** --\n\n` + messageToSend);
+            message.channel.send(`-- **Crystal Mine ${level} Locations** --\n\n`);
+            // send 5 lines at a time using '\n' as the delimiter
+            const lines = messageToSend.split('\n');
+            const chunk = 5;
+            for (let i = 0; i < lines.length; i += chunk) {
+                const temparray = lines.slice(i, i + chunk);
+                // check if the message is not empty
+                if (temparray.join('\n') !== '') {
+                    message.channel.send(temparray.join('\n'));
+                }
+            }
         } else {
             // send message to discord
             message.channel.send(`No crystal mines found for level ${level}`);
@@ -64,7 +80,7 @@ client.on('messageCreate', message => {
 // get all crystal mine locations from user input and send to discord
 // user input format: /get all
 client.on('messageCreate', message => {
-    if (message.content.startsWith('/cmine all')) {
+    if (message.content.startsWith('/cmine all') && (message.channel.id === '1040978360349765703' || message.channel.id === '1040934854252040273')) {
         let messageToSend = '';
 
         // sort the crystal mine locations by level
@@ -78,8 +94,17 @@ client.on('messageCreate', message => {
 
         // check if messageToSend is not empty
         if (messageToSend !== '') {
-            // send message to discord
-            message.channel.send(`-- **Crystal Mine Locations** --\n\n` + messageToSend);
+            message.channel.send(`-- **All Crystal Mine Locations** --\n\n`);
+            // send 5 lines at a time using '\n' as the delimiter
+            const lines = messageToSend.split('\n');
+            const chunk = 5;
+            for (let i = 0; i < lines.length; i += chunk) {
+                const temparray = lines.slice(i, i + chunk);
+                // check if the message is not empty
+                if (temparray.join('\n') !== '') {
+                    message.channel.send(temparray.join('\n'));
+                }
+            }
         } else {
             // send message to discord
             message.channel.send(`No crystal mines found`);
@@ -148,6 +173,10 @@ function startWebsocket() {
     ws.onclose = function () {
         // connection closed
         wsOpen = false;
+        ws = null;
+
+        // start websocket again
+        setTimeout(startWebsocket, Math.floor(Math.random() * 60000) + 10000)
     };
 
     ws.on('message', data => {
@@ -179,8 +208,9 @@ function startWebsocket() {
                         }
                     */
 
+
                     // check if the object is a crystal mine level 1
-                    if (object.level === 1 && object.param && object.param.value === 50) {
+                    if (object.level === 1 && object.param && object.param.value === 50 && !object.occupied) {
                         // push the object location, level, and param value to the crystalMineLocations array
                         crystalMineLocations.push({
                             location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
@@ -189,7 +219,7 @@ function startWebsocket() {
                     }
 
                     // // check if the object is a crystal mine level 2
-                    if (object.level === 2 && object.param && object.param.value === 100) {
+                    if (object.level === 2 && object.param && object.param.value === 100 && !object.occupied) {
                         // push the object location, level, and param value to the crystalMineLocations array
                         crystalMineLocations.push({
                             location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
@@ -198,7 +228,7 @@ function startWebsocket() {
                     }
 
                     // // check if the object is a crystal mine level 3
-                    if (object.level === 3 && object.param && object.param.value === 200) {
+                    if (object.level === 3 && object.param && object.param.value === 200 && !object.occupied) {
                         // push the object location, level, and param value to the crystalMineLocations array
                         crystalMineLocations.push({
                             location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
@@ -207,7 +237,7 @@ function startWebsocket() {
                     }
 
                     // // check if the object is a crystal mine level 4
-                    if (object.level === 4 && object.param && object.param.value === 400) {
+                    if (object.level === 4 && object.param && object.param.value === 400 && !object.occupied) {
                         // push the object location, level, and param value to the crystalMineLocations array
                         crystalMineLocations.push({
                             location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
@@ -216,7 +246,7 @@ function startWebsocket() {
                     }
 
                     // // check if the object is a crystal mine level 5
-                    if (object.level === 5 && object.param && object.param.value === 800) {
+                    if (object.level === 5 && object.param && object.param.value === 800 && !object.occupied) {
                         // push the object location, level, and param value to the crystalMineLocations array
                         crystalMineLocations.push({
                             location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
@@ -230,13 +260,6 @@ function startWebsocket() {
         }
     });
 }
-
-// get UTC minutes
-const utcMinutes = () => {
-    const date = new Date();
-    const utcMinutes = date.getUTCMinutes();
-    return utcMinutes;
-};
 
 // client on ready
 client.on('ready', () => {
@@ -255,18 +278,18 @@ client.on('ready', () => {
         try {
             while (1) {
                 if (process.env.CONTINENT === '45') {
-                    if (utcMinutes() === 22 && wsOpen === false) {
+                    if (wsOpen === false) {
                         // empty crystalMineLocations array
-                        crystalMineLocations = [];
+                        crystalMineLocations.length = 0;
 
                         startWebsocket();
                     }
                 }
 
                 if (process.env.CONTINENT === '18') {
-                    if (utcMinutes() === 8 && wsOpen === false) {
+                    if (wsOpen === false) {
                         // empty crystalMineLocations array
-                        crystalMineLocations = [];
+                        crystalMineLocations.length = 0;
 
                         startWebsocket();
                     }
@@ -282,7 +305,7 @@ client.on('ready', () => {
 
 // show help message
 client.on('messageCreate', msg => {
-    if (msg.content === '/help') {
+    if (msg.content === '/help' && (msg.channel.id === '1040978360349765703' || msg.channel.id === '1040934854252040273')) {
         msg.reply(`1. **/help** - Shows this message.\n2. **/cmine level [LEVEL]** - Fetches the crystal mines for the specified level.\n3. **/cmine all** - Fetches all crystal mines.`);
     }
 });
