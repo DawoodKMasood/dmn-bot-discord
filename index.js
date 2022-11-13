@@ -222,14 +222,15 @@ function startWebsocket() {
                     if (object.level === 1 && object.param && object.param.value === 50) {
                         // if the object already exists in the crystalMineLocations array and object is occupied, then remove it
                         if (crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && object.occupied)) {
-                            // remove the object from the crystalMineLocations array
-                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.location["X"] !== object.loc[1] || crystalMineLocation.location["Y"] !== object.loc[2]);
+                            // remove the object from the crystalMineLocations array using the object _id and crystalMineLocations id
+                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.id !== object._id);
                         }
 
                         // if the object does not exist in the crystalMineLocations array and object is not occupied, then add it
-                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && !object.occupied)) {
+                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2]) && !object.occupied) {
                             // add the object to the crystalMineLocations array
                             crystalMineLocations.push({
+                                id: object._id,
                                 location: {
                                     "X": object.loc[1],
                                     "Y": object.loc[2]
@@ -244,14 +245,15 @@ function startWebsocket() {
                     if (object.level === 2 && object.param && object.param.value === 100) {
                         // if the object already exists in the crystalMineLocations array and object is occupied, then remove it
                         if (crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && object.occupied)) {
-                            // remove the object from the crystalMineLocations array
-                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.location["X"] !== object.loc[1] || crystalMineLocation.location["Y"] !== object.loc[2]);
+                            // remove the object from the crystalMineLocations array using the object _id and crystalMineLocations id
+                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.id !== object._id);
                         }
 
                         // if the object does not exist in the crystalMineLocations array and object is not occupied, then add it
-                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && !object.occupied)) {
+                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2]) && !object.occupied) {
                             // add the object to the crystalMineLocations array
                             crystalMineLocations.push({
+                                id: object._id,
                                 location: {
                                     "X": object.loc[1],
                                     "Y": object.loc[2]
@@ -266,14 +268,15 @@ function startWebsocket() {
                     if (object.level === 3 && object.param && object.param.value === 200) {
                         // if the object already exists in the crystalMineLocations array and object is occupied, then remove it
                         if (crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && object.occupied)) {
-                            // remove the object from the crystalMineLocations array
-                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.location["X"] !== object.loc[1] || crystalMineLocation.location["Y"] !== object.loc[2]);
+                            // remove the object from the crystalMineLocations array using the object _id and crystalMineLocations id
+                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.id !== object._id);
                         }
 
                         // if the object does not exist in the crystalMineLocations array and object is not occupied, then add it
-                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && !object.occupied)) {
+                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2]) && !object.occupied) {
                             // add the object to the crystalMineLocations array
                             crystalMineLocations.push({
+                                id: object._id,
                                 location: {
                                     "X": object.loc[1],
                                     "Y": object.loc[2]
@@ -288,14 +291,15 @@ function startWebsocket() {
                     if (object.level === 4 && object.param && object.param.value === 300) {
                         // if the object already exists in the crystalMineLocations array and object is occupied, then remove it
                         if (crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && object.occupied)) {
-                            // remove the object from the crystalMineLocations array
-                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.location["X"] !== object.loc[1] || crystalMineLocation.location["Y"] !== object.loc[2]);
+                            // remove the object from the crystalMineLocations array using the object _id and crystalMineLocations id
+                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.id !== object._id);
                         }
 
                         // if the object does not exist in the crystalMineLocations array and object is not occupied, then add it
-                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && !object.occupied)) {
+                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2]) && !object.occupied) {
                             // add the object to the crystalMineLocations array
                             crystalMineLocations.push({
+                                id: object._id,
                                 location: {
                                     "X": object.loc[1],
                                     "Y": object.loc[2]
@@ -310,14 +314,15 @@ function startWebsocket() {
                     if (object.level === 5 && object.param && object.param.value === 600) {
                         // if the object already exists in the crystalMineLocations array and object is occupied, then remove it
                         if (crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && object.occupied)) {
-                            // remove the object from the crystalMineLocations array
-                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.location["X"] !== object.loc[1] || crystalMineLocation.location["Y"] !== object.loc[2]);
+                            // remove the object from the crystalMineLocations array using the object _id and crystalMineLocations id
+                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.id !== object._id);
                         }
 
                         // if the object does not exist in the crystalMineLocations array and object is not occupied, then add it
-                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && !object.occupied)) {
+                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2]) && !object.occupied) {
                             // add the object to the crystalMineLocations array
                             crystalMineLocations.push({
+                                id: object._id,
                                 location: {
                                     "X": object.loc[1],
                                     "Y": object.loc[2]
