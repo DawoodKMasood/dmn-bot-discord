@@ -59,7 +59,6 @@ client.on('messageCreate', message => {
 
         // check if messageToSend is not empty
         if (messageToSend !== '') {
-            message.channel.send(`-- **Crystal Mine ${level} Locations** --\n\n`);
             // send 5 lines at a time using '\n' as the delimiter
             const lines = messageToSend.split('\n');
             const chunk = 5;
@@ -67,12 +66,22 @@ client.on('messageCreate', message => {
                 const temparray = lines.slice(i, i + chunk);
                 // check if the message is not empty
                 if (temparray.join('\n') !== '') {
-                    message.channel.send(temparray.join('\n'));
+                    if (process.env.CONTINENT === '18') {
+                        client.channels.cache.get('1040978360349765703').send(temparray.join('\n'));
+                    }
+                    if (process.env.CONTINENT === '45') {
+                        client.channels.cache.get('1040934854252040273').send(temparray.join('\n'));
+                    }
                 }
             }
         } else {
-            // send message to discord
-            message.channel.send(`No crystal mines found for level ${level}`);
+            if (process.env.CONTINENT === '18') {
+                client.channels.cache.get('1040978360349765703').send('No crystal mine locations found for level ' + level);
+            }
+
+            if (process.env.CONTINENT === '45') {
+                client.channels.cache.get('1040934854252040273').send('No crystal mine locations found for level ' + level);
+            }
         }
     }
 });
@@ -94,7 +103,6 @@ client.on('messageCreate', message => {
 
         // check if messageToSend is not empty
         if (messageToSend !== '') {
-            message.channel.send(`-- **All Crystal Mine Locations** --\n\n`);
             // send 5 lines at a time using '\n' as the delimiter
             const lines = messageToSend.split('\n');
             const chunk = 5;
@@ -102,12 +110,23 @@ client.on('messageCreate', message => {
                 const temparray = lines.slice(i, i + chunk);
                 // check if the message is not empty
                 if (temparray.join('\n') !== '') {
-                    message.channel.send(temparray.join('\n'));
+                    if (process.env.CONTINENT === '18') {
+                        client.channels.cache.get('1040978360349765703').send(temparray.join('\n'));
+                    }
+                    if (process.env.CONTINENT === '45') {
+                        client.channels.cache.get('1040934854252040273').send(temparray.join('\n'));
+                    }
                 }
             }
         } else {
             // send message to discord
-            message.channel.send(`No crystal mines found`);
+            if (process.env.CONTINENT === '18') {
+                client.channels.cache.get('1040978360349765703').send('No crystal mine locations found');
+            }
+
+            if (process.env.CONTINENT === '45') {
+                client.channels.cache.get('1040934854252040273').send('No crystal mine locations found');
+            }
         }
     }
 });
@@ -158,13 +177,13 @@ function startWebsocket() {
         if (process.env.CONTINENT === '18') {
             // delete all previous messages in the channel
             client.channels.cache.get('1040978360349765703').bulkDelete(100);
-            client.channels.cache.get('1040978360349765703').send(`🔍 **Enola is searching Crystal Mines!** 🧐`);
+            client.channels.cache.get('1040978360349765703').send(`**Sherlock is searching Crystal Mines!** 🧐`);
         }
 
         if (process.env.CONTINENT === '45') {
             // delete all messages in the channel
             client.channels.cache.get('1040934854252040273').bulkDelete(100);
-            client.channels.cache.get('1040934854252040273').send(`Enola is searching Crystal Mines! 🧐`);
+            client.channels.cache.get('1040934854252040273').send(`**Sherlock is searching Crystal Mines!** 🧐`);
         }
 
         search();
