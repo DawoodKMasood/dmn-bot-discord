@@ -33,7 +33,7 @@ let loggedIn = false;
 // get crystal mine locations from user input and send to discord
 // user input format: /crystalmine level [level]
 client.on('messageCreate', message => {
-    if (message.content.startsWith('/cmine level') && (message.channel.id === '1040978360349765703')) {
+    if (message.content.startsWith('/cmine level') && (message.channel.id === process.env.CHANNEL_ID)) {
         // get the level from the user input
         const level = message.content.split(' ')[2];
 
@@ -66,22 +66,11 @@ client.on('messageCreate', message => {
                 const temparray = lines.slice(i, i + chunk);
                 // check if the message is not empty
                 if (temparray.join('\n') !== '') {
-                    if (process.env.CONTINENT === '18') {
-                        client.channels.cache.get('1040978360349765703').send(temparray.join('\n'));
-                    }
-                    if (process.env.CONTINENT === '45') {
-                        client.channels.cache.get('1040934854252040273').send(temparray.join('\n'));
-                    }
+                    client.channels.cache.get(process.env.CHANNEL_ID).send(temparray.join('\n'));
                 }
             }
         } else {
-            if (process.env.CONTINENT === '18') {
-                client.channels.cache.get('1040978360349765703').send('No crystal mine locations found for level ' + level);
-            }
-
-            if (process.env.CONTINENT === '45') {
-                client.channels.cache.get('1040934854252040273').send('No crystal mine locations found for level ' + level);
-            }
+            client.channels.cache.get(process.env.CHANNEL_ID).send('No crystal mine locations found for level ' + level);
         }
     }
 });
@@ -89,7 +78,7 @@ client.on('messageCreate', message => {
 // get all crystal mine locations from user input and send to discord
 // user input format: /get all
 client.on('messageCreate', message => {
-    if (message.content.startsWith('/cmine all') && (message.channel.id === '1040978360349765703')) {
+    if (message.content.startsWith('/cmine all') && (message.channel.id === process.env.CHANNEL_ID)) {
         let messageToSend = '';
 
         // sort the crystal mine locations by level
@@ -110,23 +99,12 @@ client.on('messageCreate', message => {
                 const temparray = lines.slice(i, i + chunk);
                 // check if the message is not empty
                 if (temparray.join('\n') !== '') {
-                    if (process.env.CONTINENT === '18') {
-                        client.channels.cache.get('1040978360349765703').send(temparray.join('\n'));
-                    }
-                    if (process.env.CONTINENT === '45') {
-                        client.channels.cache.get('1040934854252040273').send(temparray.join('\n'));
-                    }
+                    client.channels.cache.get(process.env.CHANNEL_ID).send(temparray.join('\n'));
                 }
             }
         } else {
             // send message to discord
-            if (process.env.CONTINENT === '18') {
-                client.channels.cache.get('1040978360349765703').send('No crystal mine locations found');
-            }
-
-            if (process.env.CONTINENT === '45') {
-                client.channels.cache.get('1040934854252040273').send('No crystal mine locations found');
-            }
+            client.channels.cache.get(process.env.CHANNEL_ID).send('No crystal mine locations found');
         }
     }
 });
@@ -154,13 +132,7 @@ function startWebsocket() {
         }
 
         // send message to discord channel that the bot is done
-        if (process.env.CONTINENT === '18') {
-            client.channels.cache.get('1040978360349765703').send(`------\n**INFO:** Completed my search! I found ${crystalMineLocations.length} crystal mines.\n------`);
-        }
-
-        if (process.env.CONTINENT === '45') {
-            client.channels.cache.get('1040934854252040273').send(`------\n**INFO:** Completed my search! I found ${crystalMineLocations.length} crystal mines.\n------`);
-        }
+        client.channels.cache.get(process.env.CHANNEL_ID).send(`------\n**INFO:** Completed my search! I found ${crystalMineLocations.length} crystal mines.\n------`);
 
         // reset start position
         startPosition = 4095;
@@ -174,17 +146,9 @@ function startWebsocket() {
     ws.on('open', async function open() {
         wsOpen = true;
 
-        if (process.env.CONTINENT === '18') {
-            // delete all previous messages in the channel
-            client.channels.cache.get('1040978360349765703').bulkDelete(100);
-            client.channels.cache.get('1040978360349765703').send(`**Sherlock is searching Crystal Mines!** 🧐`);
-        }
-
-        if (process.env.CONTINENT === '45') {
-            // delete all messages in the channel
-            client.channels.cache.get('1040934854252040273').bulkDelete(100);
-            client.channels.cache.get('1040934854252040273').send(`**Sherlock is searching Crystal Mines!** 🧐`);
-        }
+        // delete all previous messages in the channel
+        client.channels.cache.get(process.env.CHANNEL_ID).bulkDelete(100);
+        client.channels.cache.get(process.env.CHANNEL_ID).send(`**${process.env.BOT_NAME} is searching Crystal Mines!** 🧐`);
 
         search();
     });
@@ -283,35 +247,16 @@ function startWebsocket() {
 // client on ready
 client.on('ready', () => {
 
-    if (process.env.CONTINENT === '18') {
-        // delete all previous messages in the channel
-        client.channels.cache.get('1040978360349765703').send(`Logged in as ${client.user.tag}!`);
-    }
-
-    if (process.env.CONTINENT === '45') {
-        // delete all messages in the channel
-        client.channels.cache.get('1040934854252040273').send(`Logged in as ${client.user.tag}!`);
-    }
+    client.channels.cache.get(process.env.CHANNEL_ID).send(`Logged in as ${process.env.BOT_NAME}!`);
 
     (async () => {
         try {
             while (1) {
-                if (process.env.CONTINENT === '45') {
-                    if (wsOpen === false) {
-                        // empty crystalMineLocations array
-                        crystalMineLocations.length = 0;
+                if (wsOpen === false) {
+                    // empty crystalMineLocations array
+                    crystalMineLocations.length = 0;
 
-                        startWebsocket();
-                    }
-                }
-
-                if (process.env.CONTINENT === '18') {
-                    if (wsOpen === false) {
-                        // empty crystalMineLocations array
-                        crystalMineLocations.length = 0;
-
-                        startWebsocket();
-                    }
+                    startWebsocket();
                 }
 
                 await new Promise((resolve) => setTimeout(resolve, 10000));
@@ -324,8 +269,8 @@ client.on('ready', () => {
 
 // show help message
 client.on('messageCreate', msg => {
-    if (msg.content === '/help' && (msg.channel.id === '1040978360349765703' || msg.channel.id === '1040934854252040273')) {
-        msg.reply(`1. **/help** - Shows this message.\n2. **/cmine level [LEVEL]** - Fetches the crystal mines for the specified level.\n3. **/cmine all** - Fetches all crystal mines.`);
+    if (msg.content === '/help' && (message.channel.id === process.env.CHANNEL_ID)) {
+        client.channels.cache.get(process.env.CHANNEL_ID).send(`1. **/help** - Shows this message.\n2. **/cmine level [LEVEL]** - Fetches the crystal mines for the specified level.\n3. **/cmine all** - Fetches all crystal mines.`);
     }
 });
 
