@@ -389,7 +389,7 @@ function startWebsocket() {
                         }
                     }
 
-                    // check if the object is a goblin level 1
+                    // check if the object is a goblin level 3
                     if (object.level === 3 && object.param && object.param.value === 15000 && object.code === 20200104) {
                         // if the object does not exist in the goblinLocations array, then add it
                         if (!goblinLocations.some(goblinLocation => goblinLocation.location["X"] === object.loc[1] && goblinLocation.location["Y"] === object.loc[2])) {
@@ -428,7 +428,7 @@ function startWebsocket() {
                         }
                     }
 
-                    // check if the object is a goblin level 1
+                    // check if the object is a goblin level 4
                     if (object.level === 4 && object.param && object.param.value === 50000 && object.code === 20200104) {
                         // if the object does not exist in the goblinLocations array, then add it
                         if (!goblinLocations.some(goblinLocation => goblinLocation.location["X"] === object.loc[1] && goblinLocation.location["Y"] === object.loc[2])) {
@@ -467,7 +467,7 @@ function startWebsocket() {
                         }
                     }
 
-                    // check if the object is a goblin level 1
+                    // check if the object is a goblin level 5
                     if (object.level === 5 && object.param && object.param.value === 150000 && object.code === 20200104) {
                         // if the object does not exist in the goblinLocations array, then add it
                         if (!goblinLocations.some(goblinLocation => goblinLocation.location["X"] === object.loc[1] && goblinLocation.location["Y"] === object.loc[2])) {
@@ -496,6 +496,54 @@ function startWebsocket() {
                             // add the object to the crystalMineLocations array
                             crystalMineLocations.push({
                                 id: object._id,
+                                location: {
+                                    "X": object.loc[1],
+                                    "Y": object.loc[2]
+                                },
+                                level: object.level,
+                                expires: new Date(object.expired)
+                            });
+                        }
+                    }
+
+                    // check if the object is a goblin level 6
+                    if (object.level === 6 && object.param && object.param.value === 250000 && object.code === 20200104) {
+                        // if the object does not exist in the goblinLocations array, then add it
+                        if (!goblinLocations.some(goblinLocation => goblinLocation.location["X"] === object.loc[1] && goblinLocation.location["Y"] === object.loc[2])) {
+                            // add the object to the goblinLocations array
+                            goblinLocations.push({
+                                location: {
+                                    "X": object.loc[1],
+                                    "Y": object.loc[2]
+                                },
+                                level: object.level,
+                                expires: new Date(object.expired)
+                            });
+                        }
+                    }
+
+                    // check if the object is a goblin level 7
+                    if (object.level === 7 && object.param && object.param.value === 500000 && object.code === 20200104) {
+                        // if the object does not exist in the goblinLocations array, then add it
+                        if (!goblinLocations.some(goblinLocation => goblinLocation.location["X"] === object.loc[1] && goblinLocation.location["Y"] === object.loc[2])) {
+                            // add the object to the goblinLocations array
+                            goblinLocations.push({
+                                location: {
+                                    "X": object.loc[1],
+                                    "Y": object.loc[2]
+                                },
+                                level: object.level,
+                                expires: new Date(object.expired)
+                            });
+                        }
+                    }
+
+                    // check if the object is a goblin level 6
+                    if (object.level === 8 && object.param && object.param.value === 750000 && object.code === 20200104) {
+                        // if the object does not exist in the goblinLocations array, then add it
+                        if (!goblinLocations.some(goblinLocation => goblinLocation.location["X"] === object.loc[1] && goblinLocation.location["Y"] === object.loc[2])) {
+                            // add the object to the goblinLocations array
+                            goblinLocations.push({
                                 location: {
                                     "X": object.loc[1],
                                     "Y": object.loc[2]
