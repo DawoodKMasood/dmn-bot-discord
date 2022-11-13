@@ -145,8 +145,6 @@ function startWebsocket() {
     let ws = new WebSocket(process.env.WEBSOCKET_URL);
 
     async function search() {
-        // empty crystalMineLocations array
-        crystalMineLocations.length = 0;
 
         ws.send(`42["/field/enter", {"token":"${process.env.ACCESS_TOKEN}"}]`);
 
@@ -163,9 +161,6 @@ function startWebsocket() {
             // add delay of 1 second to prevent rate limiting
             await new Promise((resolve) => setTimeout(resolve, 1000));
         }
-
-        // send message to discord channel that the bot is done
-        client.channels.cache.get(process.env.CHANNEL_ID).send(`------\n**INFO:** Completed my search! I found ${crystalMineLocations.length} crystal mines.\n------`);
 
         // reset start position
         startPosition = 4095;
@@ -187,7 +182,7 @@ function startWebsocket() {
         wsOpen = false;
         ws = null;
 
-        let randomTime = Math.floor(Math.random() * 300000) + 120000;
+        let randomTime = Math.floor(Math.random() * 1000) + 10000;
 
         // start websocket again
         setTimeout(startWebsocket, randomTime)
@@ -224,53 +219,113 @@ function startWebsocket() {
 
 
                     // check if the object is a crystal mine level 1
-                    if (object.level === 1 && object.param && object.param.value === 50 && !object.occupied) {
-                        // push the object location, level, and param value to the crystalMineLocations array
-                        crystalMineLocations.push({
-                            location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
-                            level: object.level,
-                            expires: new Date(object.expired),
-                        });
+                    if (object.level === 1 && object.param && object.param.value === 50) {
+                        // if the object already exists in the crystalMineLocations array and object is occupied, then remove it
+                        if (crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && object.occupied)) {
+                            // remove the object from the crystalMineLocations array
+                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.location["X"] !== object.loc[1] || crystalMineLocation.location["Y"] !== object.loc[2]);
+                        }
+
+                        // if the object does not exist in the crystalMineLocations array and object is not occupied, then add it
+                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && !object.occupied)) {
+                            // add the object to the crystalMineLocations array
+                            crystalMineLocations.push({
+                                location: {
+                                    "X": object.loc[1],
+                                    "Y": object.loc[2]
+                                },
+                                level: object.level,
+                                expires: new Date(object.expired)
+                            });
+                        }
                     }
 
                     // // check if the object is a crystal mine level 2
-                    if (object.level === 2 && object.param && object.param.value === 100 && !object.occupied) {
-                        // push the object location, level, and param value to the crystalMineLocations array
-                        crystalMineLocations.push({
-                            location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
-                            level: object.level,
-                            expires: new Date(object.expired),
-                        });
+                    if (object.level === 2 && object.param && object.param.value === 100) {
+                        // if the object already exists in the crystalMineLocations array and object is occupied, then remove it
+                        if (crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && object.occupied)) {
+                            // remove the object from the crystalMineLocations array
+                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.location["X"] !== object.loc[1] || crystalMineLocation.location["Y"] !== object.loc[2]);
+                        }
+
+                        // if the object does not exist in the crystalMineLocations array and object is not occupied, then add it
+                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && !object.occupied)) {
+                            // add the object to the crystalMineLocations array
+                            crystalMineLocations.push({
+                                location: {
+                                    "X": object.loc[1],
+                                    "Y": object.loc[2]
+                                },
+                                level: object.level,
+                                expires: new Date(object.expired)
+                            });
+                        }
                     }
 
                     // // check if the object is a crystal mine level 3
-                    if (object.level === 3 && object.param && object.param.value === 200 && !object.occupied) {
-                        // push the object location, level, and param value to the crystalMineLocations array
-                        crystalMineLocations.push({
-                            location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
-                            level: object.level,
-                            expires: new Date(object.expired),
-                        });
+                    if (object.level === 3 && object.param && object.param.value === 200) {
+                        // if the object already exists in the crystalMineLocations array and object is occupied, then remove it
+                        if (crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && object.occupied)) {
+                            // remove the object from the crystalMineLocations array
+                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.location["X"] !== object.loc[1] || crystalMineLocation.location["Y"] !== object.loc[2]);
+                        }
+
+                        // if the object does not exist in the crystalMineLocations array and object is not occupied, then add it
+                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && !object.occupied)) {
+                            // add the object to the crystalMineLocations array
+                            crystalMineLocations.push({
+                                location: {
+                                    "X": object.loc[1],
+                                    "Y": object.loc[2]
+                                },
+                                level: object.level,
+                                expires: new Date(object.expired)
+                            });
+                        }
                     }
 
                     // // check if the object is a crystal mine level 4
-                    if (object.level === 4 && object.param && object.param.value === 300 && !object.occupied) {
-                        // push the object location, level, and param value to the crystalMineLocations array
-                        crystalMineLocations.push({
-                            location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
-                            level: object.level,
-                            expires: new Date(object.expired),
-                        });
+                    if (object.level === 4 && object.param && object.param.value === 300) {
+                        // if the object already exists in the crystalMineLocations array and object is occupied, then remove it
+                        if (crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && object.occupied)) {
+                            // remove the object from the crystalMineLocations array
+                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.location["X"] !== object.loc[1] || crystalMineLocation.location["Y"] !== object.loc[2]);
+                        }
+
+                        // if the object does not exist in the crystalMineLocations array and object is not occupied, then add it
+                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && !object.occupied)) {
+                            // add the object to the crystalMineLocations array
+                            crystalMineLocations.push({
+                                location: {
+                                    "X": object.loc[1],
+                                    "Y": object.loc[2]
+                                },
+                                level: object.level,
+                                expires: new Date(object.expired)
+                            });
+                        }
                     }
 
                     // // check if the object is a crystal mine level 5
-                    if (object.level === 5 && object.param && object.param.value === 600 && !object.occupied) {
-                        // push the object location, level, and param value to the crystalMineLocations array
-                        crystalMineLocations.push({
-                            location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
-                            level: object.level,
-                            expires: new Date(object.expired),
-                        });
+                    if (object.level === 5 && object.param && object.param.value === 600) {
+                        // if the object already exists in the crystalMineLocations array and object is occupied, then remove it
+                        if (crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && object.occupied)) {
+                            // remove the object from the crystalMineLocations array
+                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.location["X"] !== object.loc[1] || crystalMineLocation.location["Y"] !== object.loc[2]);
+                        }
+
+                        // if the object does not exist in the crystalMineLocations array and object is not occupied, then add it
+                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && !object.occupied)) {
+                            // add the object to the crystalMineLocations array
+                            crystalMineLocations.push({
+                                location: {
+                                    "X": object.loc[1],
+                                    "Y": object.loc[2]
+                                },
+                                level: object.level,
+                                expires: new Date(object.expired)
+                            });
+                        }
                     }
 
                 })
