@@ -14,7 +14,7 @@ const isJson = (str) => {
 }
 
 // store crystal mine locations in a map
-const crystalMineLocations = [];
+let crystalMineLocations = [];
 
 const client = new Client({
     intents: [
