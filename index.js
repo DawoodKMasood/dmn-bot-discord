@@ -199,48 +199,8 @@ client.on('messageCreate', message => {
 // user input format: /goblin all
 client.on('messageCreate', message => {
     if (message.content.startsWith('/goblin all') && (message.channel.id === process.env.CHANNEL_ID)) {
-        let messageToSend = '';
-
-        // sort the filtered crystal mine locations by expired time
-        goblinLocations.sort((a, b) => b.expires - a.expires);
-
-        // sort the filtered crystal mine locations by level
-        goblinLocations.sort((a, b) => b.level - a.level);
-
-        // loop through crystal mine locations
-        goblinLocations.forEach(goblinLocation => {
-            let now = new Date().getTime();
-            let goblineData = goblinLocation.expires;
-
-            // get the time difference between now and the crystal mine location expires time
-            let timeDifference = goblineData.getTime() - now;
-
-            // format the time difference to hours
-            let hours = Math.floor(timeDifference / (1000 * 60 * 60));
-
-            // format the time difference to minutes
-            let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-
-            // append to messageToSend
-            messageToSend += goblinLocation !== undefined && `**X:** ${goblinLocation.location["X"]}, **Y:** ${goblinLocation.location["Y"]} | **Level:** ${goblinLocation.level}\n`;
-        })
-
-        // check if messageToSend is not empty
-        if (messageToSend !== '') {
-            // send 5 lines at a time using '\n' as the delimiter
-            const lines = messageToSend.split('\n');
-            const chunk = 5;
-            for (let i = 0; i < lines.length; i += chunk) {
-                const temparray = lines.slice(i, i + chunk);
-                // check if the message is not empty
-                if (temparray.join('\n') !== '') {
-                    client.channels.cache.get(process.env.CHANNEL_ID).send(temparray.join('\n'));
-                }
-            }
-        } else {
-            // send message to discord
-            client.channels.cache.get(process.env.CHANNEL_ID).send('No goblin location found!');
-        }
+        // send message to discord
+        client.channels.cache.get(process.env.CHANNEL_ID).send('To avoid spam, please use **/goblin level [LEVEL]** command!');
     }
 });
 
@@ -570,7 +530,7 @@ client.on('ready', () => {
 // show help message
 client.on('messageCreate', message => {
     if (message.content === '/help' && (message.channel.id === process.env.CHANNEL_ID)) {
-        client.channels.cache.get(process.env.CHANNEL_ID).send(`1. **/help** - Shows this message.\n2. **/cmine level [LEVEL]** - Fetches the crystal mines for the specified level.\n3. **/cmine all** - Fetches all crystal mines.\n4. **/goblin level [LEVEL]** - Fetches the goblins for the specified level.\n5. **/goblin all** - Fetches all goblins.`);
+        client.channels.cache.get(process.env.CHANNEL_ID).send(`1. **/help** - Shows this message.\n2. **/cmine level [LEVEL]** - Fetches the crystal mines for the specified level.\n3. **/cmine all** - Fetches all crystal mines.\n4. **/goblin level [LEVEL]** - Fetches the goblins for the specified level.`);
     }
 });
 
