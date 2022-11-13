@@ -115,6 +115,9 @@ function startWebsocket() {
     let ws = new WebSocket(process.env.WEBSOCKET_URL);
 
     async function search() {
+        // empty crystalMineLocations array
+        crystalMineLocations.length = 0;
+
         ws.send(`42["/field/enter", {"token":"${process.env.ACCESS_TOKEN}"}]`);
 
         // loop until start position is less than end position
@@ -153,9 +156,6 @@ function startWebsocket() {
         // connection closed
         wsOpen = false;
         ws = null;
-
-        // empty crystalMineLocations array
-        crystalMineLocations.length = 0;
 
         let randomTime = Math.floor(Math.random() * 300000) + 120000;
 
