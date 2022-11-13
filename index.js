@@ -221,7 +221,7 @@ function startWebsocket() {
                     }
 
                     // // check if the object is a crystal mine level 4
-                    if (object.level === 4 && object.param && object.param.value === 400 && !object.occupied) {
+                    if (object.level === 4 && object.param && object.param.value === 300 && !object.occupied) {
                         // push the object location, level, and param value to the crystalMineLocations array
                         crystalMineLocations.push({
                             location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
@@ -230,7 +230,7 @@ function startWebsocket() {
                     }
 
                     // // check if the object is a crystal mine level 5
-                    if (object.level === 5 && object.param && object.param.value === 800 && !object.occupied) {
+                    if (object.level === 5 && object.param && object.param.value === 500 && !object.occupied) {
                         // push the object location, level, and param value to the crystalMineLocations array
                         crystalMineLocations.push({
                             location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
