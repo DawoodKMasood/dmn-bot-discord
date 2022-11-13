@@ -128,7 +128,7 @@ function startWebsocket() {
             startPosition -= 8;
 
             // add delay of 1 second to prevent rate limiting
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 5000) + 1000));
         }
 
         // send message to discord channel that the bot is done
@@ -159,7 +159,7 @@ function startWebsocket() {
         ws = null;
 
         // start websocket again
-        setTimeout(startWebsocket, Math.floor(Math.random() * 60000) + 10000)
+        setTimeout(startWebsocket, Math.floor(Math.random() * 120000) + 10000)
     };
 
     ws.on('message', data => {
