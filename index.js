@@ -570,7 +570,7 @@ client.on('ready', () => {
 // show help message
 client.on('messageCreate', message => {
     if (message.content === '/help' && (message.channel.id === process.env.CHANNEL_ID)) {
-        client.channels.cache.get(process.env.CHANNEL_ID).send(`1. **/help** - Shows this message.\n2. **/cmine level [LEVEL]** - Fetches the crystal mines for the specified level.\n3. **/cmine all** - Fetches all crystal mines.`);
+        client.channels.cache.get(process.env.CHANNEL_ID).send(`1. **/help** - Shows this message.\n2. **/cmine level [LEVEL]** - Fetches the crystal mines for the specified level.\n3. **/cmine all** - Fetches all crystal mines.\n4. **/goblin level [LEVEL]** - Fetches the goblins for the specified level.\n5. **/goblin all** - Fetches all goblins.`);
     }
 });
 
