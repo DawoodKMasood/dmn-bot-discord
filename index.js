@@ -64,11 +64,8 @@ client.on('messageCreate', message => {
             // format the time difference to minutes
             let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
 
-            // if hour is greater than 30, then add the crystal mine location to the message
-            if (hours >= 30) {
-                // append to messageToSend
-                messageToSend += goblinLocation !== undefined && `**X:** ${goblinLocation.location["X"]}, **Y:** ${goblinLocation.location["Y"]} | **Level:** ${goblinLocation.level} - (${hours}H:${minutes}M)\n`;
-            }
+            // append to messageToSend
+            messageToSend += goblinLocation !== undefined && `**X:** ${goblinLocation.location["X"]}, **Y:** ${goblinLocation.location["Y"]} | **Level:** ${goblinLocation.level}\n`;
         })
 
         // check if messageToSend is not empty
@@ -224,11 +221,8 @@ client.on('messageCreate', message => {
             // format the time difference to minutes
             let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
 
-            // if hour is greater than 30, then add the crystal mine location to the message
-            if (hours >= 30) {
-                // append to messageToSend
-                messageToSend += goblinLocation !== undefined && `**X:** ${goblinLocation.location["X"]}, **Y:** ${goblinLocation.location["Y"]} | **Level:** ${goblinLocation.level} - (${hours}H:${minutes}M)\n`;
-            }
+            // append to messageToSend
+            messageToSend += goblinLocation !== undefined && `**X:** ${goblinLocation.location["X"]}, **Y:** ${goblinLocation.location["Y"]} | **Level:** ${goblinLocation.level}\n`;
         })
 
         // check if messageToSend is not empty
