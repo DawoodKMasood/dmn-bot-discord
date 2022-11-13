@@ -33,7 +33,7 @@ let loggedIn = false;
 // get crystal mine locations from user input and send to discord
 // user input format: /crystalmine level [level]
 client.on('messageCreate', message => {
-    if (message.content.startsWith('/cmine level') && (message.channel.id === '1040978360349765703' || message.channel.id === '1040934854252040273')) {
+    if (message.content.startsWith('/cmine level') && (message.channel.id === '1040978360349765703')) {
         // get the level from the user input
         const level = message.content.split(' ')[2];
 
@@ -89,7 +89,7 @@ client.on('messageCreate', message => {
 // get all crystal mine locations from user input and send to discord
 // user input format: /get all
 client.on('messageCreate', message => {
-    if (message.content.startsWith('/cmine all') && (message.channel.id === '1040978360349765703' || message.channel.id === '1040934854252040273')) {
+    if (message.content.startsWith('/cmine all') && (message.channel.id === '1040978360349765703')) {
         let messageToSend = '';
 
         // sort the crystal mine locations by level
