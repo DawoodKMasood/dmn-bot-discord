@@ -154,6 +154,9 @@ function startWebsocket() {
         wsOpen = false;
         ws = null;
 
+        // empty crystalMineLocations array
+        crystalMineLocations.length = 0;
+
         let randomTime = Math.floor(Math.random() * 300000) + 120000;
 
         // start websocket again
@@ -249,9 +252,6 @@ client.on('ready', () => {
 
     (async () => {
         try {
-            // empty crystalMineLocations array
-            crystalMineLocations.length = 0;
-
             startWebsocket();
         } catch (error) {
             console.log(error);
