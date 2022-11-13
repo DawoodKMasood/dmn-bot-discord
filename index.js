@@ -128,7 +128,7 @@ function startWebsocket() {
             startPosition -= 8;
 
             // add delay of 1 second to prevent rate limiting
-            await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 2000) + 500));
+            await new Promise((resolve) => setTimeout(resolve, 1000));
         }
 
         // send message to discord channel that the bot is done
@@ -230,7 +230,7 @@ function startWebsocket() {
                     }
 
                     // // check if the object is a crystal mine level 5
-                    if (object.level === 5 && object.param && object.param.value === 500 && !object.occupied) {
+                    if (object.level === 5 && object.param && object.param.value === 600 && !object.occupied) {
                         // push the object location, level, and param value to the crystalMineLocations array
                         crystalMineLocations.push({
                             location: { "Continent": object.loc[0], "X": object.loc[1], "Y": object.loc[2] },
