@@ -161,7 +161,7 @@ function startWebsocket() {
         let randomTime = Math.floor(Math.random() * 150000) + 30000;
 
         // send message to discord channel that the bot is done and reseting in X minutes (randomTime)
-        client.channels.cache.get(process.env.CHANNEL_ID).send(`------\n**INFO:** Connection closed. Resetting in ${Math.floor(randomTime / 60000)} minutes.\n------`);
+        client.channels.cache.get(process.env.CHANNEL_ID).send(`------\n**INFO:** Resetting in ${Math.floor(randomTime / 60000)} minutes.\n------`);
 
         // start websocket again
         setTimeout(startWebsocket, randomTime)
