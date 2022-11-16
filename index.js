@@ -87,7 +87,7 @@ client.on('messageCreate', message => {
             }
 
             // append to messageToSend
-            messageToSend += goblinLocation !== undefined && `**X:** ${goblinLocation.location["X"]}, **Y:** ${goblinLocation.location["Y"]} | **Level:** ${goblinLocation.level} - (${hours} Hours Old) ${signal}\n`;
+            messageToSend += goblinLocation !== undefined && `**X:** ${goblinLocation.location["X"]}, **Y:** ${goblinLocation.location["Y"]} | **Level:** ${goblinLocation.level} - (${hours}H Expiry) ${signal}\n`;
 
         })
 
@@ -150,7 +150,7 @@ client.on('messageCreate', message => {
             }
 
             // append to messageToSend
-            messageToSend += crystalMineLocation !== undefined && `**X:** ${crystalMineLocation.location["X"]}, **Y:** ${crystalMineLocation.location["Y"]} | **Level:** ${crystalMineLocation.level} - (${hours} Hours Old) ${signal}\n`;
+            messageToSend += crystalMineLocation !== undefined && `**X:** ${crystalMineLocation.location["X"]}, **Y:** ${crystalMineLocation.location["Y"]} | **Level:** ${crystalMineLocation.level} - (${hours}H Expiry) ${signal}\n`;
         })
 
         // check if messageToSend is not empty
@@ -206,7 +206,7 @@ client.on('messageCreate', message => {
             }
 
             // append to messageToSend
-            messageToSend += crystalMineLocation !== undefined && `**X:** ${crystalMineLocation.location["X"]}, **Y:** ${crystalMineLocation.location["Y"]} | **Level:** ${crystalMineLocation.level} - (${hours} Hours Old) ${signal}\n`;
+            messageToSend += crystalMineLocation !== undefined && `**X:** ${crystalMineLocation.location["X"]}, **Y:** ${crystalMineLocation.location["Y"]} | **Level:** ${crystalMineLocation.level} - (${hours}H Expiry) ${signal}\n`;
         })
 
         // check if messageToSend is not empty
@@ -266,9 +266,6 @@ function authentication() {
         `json=%7B%22authType%22%3A%22guest%22%2C%22userKey%22%3A%22${randomString(6, 6)}-${randomString(4, 4)}-${randomString(4, 4)}-${randomString(4, 4)}-${randomString(12, 12)}%22%2C%22version%22%3A2%2C%22deviceInfo%22%3A%7B%22OS%22%3A%22Mac%20OS%20X%2010_15_7%22%2C%22country%22%3A%22USA%22%2C%22language%22%3A%22English%22%2C%22bundle%22%3A%22%22%2C%22version%22%3A%221.1539.119.200%22%2C%22platform%22%3A%22web%22%2C%22pushId%22%3A%22532a61c8-2dd2-4ae0-823c-bf262c13aefe%22%2C%22build%22%3A%22global%22%7D%7D`,
         { headers: headers }
     ).then(response => {
-        if (!response.data.result) {
-            authentication();
-        }
 
         // Validate if the user is authenticated by checking token
         if (response.data.token) {
@@ -276,7 +273,11 @@ function authentication() {
             ACCESS_TOKEN = response.data.token;
 
             startWebsocket();
+
+            return true;
         }
+
+        return authentication();
 
     })
 
