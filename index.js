@@ -2,6 +2,8 @@ import dotenv from 'dotenv'
 dotenv.config()
 import { Client, GatewayIntentBits } from 'discord.js';
 import WebSocket from 'ws';
+// import axios
+import axios from 'axios';
 
 // create isJson function to check if a string is a valid json
 const isJson = (str) => {
@@ -31,6 +33,18 @@ const client = new Client({
 let startPosition = 4095;
 let endPosition = 0;
 let wsOpen = false;
+let ACCESS_TOKEN = '';
+
+// function to generate random string with min and max length
+function randomString(min, max) {
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = characters.length;
+    for (let i = 0; i < Math.floor(Math.random() * (max - min + 1) + min); i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
 
 // get goblin locations from user input and send to discord
 // user input format: /goblin level [level]
@@ -208,9 +222,54 @@ function startWebsocket() {
 
     let ws = new WebSocket(process.env.WEBSOCKET_URL);
 
+    async function authentication() {
+
+        /*
+        * Target endpoint: https://api-lok-live.leagueofkingdoms.com/api/auth/login
+        * Method: POST
+        * Headers: Content-Type: application/json
+        * Body: {"authType":"guest","userKey":"6dbb1149-7c36-4966-85d0-be7f8b5ec3b6","version":2,"deviceInfo":{"OS":"Mac OS X 10_15_7","country":"USA","language":"English","bundle":"","version":"1.1539.119.200","platform":"web","pushId":"532a61c8-2dd2-4ae0-823c-bf262c13aefe","build":"global"}}
+        
+        * userKey must be random
+
+        * Successful authentication response: {"result":true,"user":{"_id":"6374f66d9271496654f93117","userKey":"6dbb1149-7c36-4966-85d0-be7f8b5ec3b6","authType":"guest","agree":false},"property":{"crystal":0,"purchase":"0","mint":0,"unmint":0,"vip":1,"kingdom":1},"lstProtect":"WyIvYXBpL2tpbmdkb20vZW50ZXIiLCIvYXBpL2tpbmdkb20vaG9zcGl0YWwvcmVjb3ZlciIsIi9hcGkva2luZ2RvbS9yZXNvdXJjZS9oYXJ2ZXN0IiwiL2FwaS9raW5nZG9tL2J1aWxkaW5nL3VwZ3JhZGUiLCIvYXBpL2tpbmdkb20vYnVpbGRpbmcvZGVtb2xpc2giLCIvYXBpL2tpbmdkb20vdHJlYXN1cmUvZXhjaGFuZ2UiLCIvYXBpL2tpbmdkb20vdHJlYXN1cmUvdXBncmFkZSIsIi9hcGkva2luZ2RvbS90cmVhc3VyZS9za2lsbC91cGdyYWRlIiwiL2FwaS9raW5nZG9tL3Rhc2svc3BlZWR1cCIsIi9hcGkva2luZ2RvbS9oZWFsL3NwZWVkdXAiLCIvYXBpL2tpbmdkb20vaGVhbC9pbnN0YW50IiwiL2FwaS9raW5nZG9tL3ZpcHNob3AvYnV5IiwiL2FwaS9raW5nZG9tL3ZpcC9jbGFpbSIsIi9hcGkvZmllbGQvbWFyY2gvaW5mbyIsIi9hcGkvZmllbGQvbWFyY2gvc3RhcnQiLCIvYXBpL2ZpZWxkL21hcmNoL3JldHVybiIsIi9hcGkvZmllbGQvcmFsbHkvc3RhcnQiLCIvYXBpL2ZpZWxkL3JhbGx5L2pvaW4iLCIvYXBpL2ZpZWxkL3RlbGVwb3J0IiwiL2FwaS9pdGVtL3VzZSIsIi9hcGkvaXRlbS9mcmVlY2hlc3QiLCIvYXBpL2l0ZW0vY29tYmluZS9za2luIiwiL2FwaS9hbGxpYW5jZS9naWZ0L2NsYWltIiwiL2FwaS9hbGxpYW5jZS9naWZ0L2NsYWltL2FsbCIsIi9hcGkvcXVlc3QvY2xhaW0iXQ==","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mzc0ZjY2ZDkyNzE0OTY2NTRmOTMxMTciLCJraW5nZG9tSWQiOiI2Mzc0ZjY2ZDkyNzE0OTY2NTRmOTMxMTgiLCJ3b3JsZElkIjo1MiwidmVyc2lvbiI6MCwiYnVpbGQiOjAsInBsYXRmb3JtIjoiIiwidGltZSI6MTY2ODYwOTY0NTU4NywiY2xpZW50WG9yIjoiMCIsImlhdCI6MTY2ODYwOTY0NSwiZXhwIjoxNjY4NjUyODQ1LCJpc3MiOiJub2RnYW1lcy5jb20iLCJzdWIiOiJ1c2VySW5mbyJ9.oUwZQbLH1cEzxHDWTyaqlv7Q-IXCCAIuXlQHlhsYChI","dbTime":"2022-11-16T14:40:49.271Z","regionHash":"IjcuMzI4MTEwMzcyMTYyMTQ5LTEwMTBub2QtMCI=","joined":true}
+        */
+
+        let headers = {
+            "accept": "*/*",
+            "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
+            "content-type": "application/x-www-form-urlencoded",
+            "sec-ch-ua": "\"Google Chrome\";v=\"107\", \"Chromium\";v=\"107\", \"Not=A?Brand\";v=\"24\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"macOS\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-site"
+        };
+
+        axios.post('https://api-lok-live.leagueofkingdoms.com/api/auth/login',
+            `json=%7B%22authType%22%3A%22guest%22%2C%22userKey%22%3A%22${randomString(6, 6)}-${randomString(4, 4)}-${randomString(4, 4)}-${randomString(4, 4)}-${randomString(12, 12)}%22%2C%22version%22%3A2%2C%22deviceInfo%22%3A%7B%22OS%22%3A%22Mac%20OS%20X%2010_15_7%22%2C%22country%22%3A%22USA%22%2C%22language%22%3A%22English%22%2C%22bundle%22%3A%22%22%2C%22version%22%3A%221.1539.119.200%22%2C%22platform%22%3A%22web%22%2C%22pushId%22%3A%22532a61c8-2dd2-4ae0-823c-bf262c13aefe%22%2C%22build%22%3A%22global%22%7D%7D`,
+            { headers: headers }
+        ).then(response => {
+            if (!response.data.result) {
+                authentication();
+            }
+
+            // Validate if the user is authenticated by checking token
+            if (response.data.token) {
+                // Save the token in the ACCESS_TOKEN variable 
+                ACCESS_TOKEN = response.data.token;
+            }
+
+            search();
+
+        })
+
+    }
+
     async function search() {
 
-        ws.send(`42["/field/enter", {"token":"${process.env.ACCESS_TOKEN}"}]`);
+        ws.send(`42["/field/enter", {"token":"${ACCESS_TOKEN}"}]`);
 
         // loop until start position is less than end position
         while (startPosition >= endPosition) {
@@ -238,7 +297,7 @@ function startWebsocket() {
     ws.on('open', async function open() {
         wsOpen = true;
 
-        search();
+        authentication();
     });
 
     ws.onclose = function () {
