@@ -75,11 +75,20 @@ client.on('messageCreate', message => {
             // format the time difference to hours
             let hours = Math.floor(timeDifference / (1000 * 60 * 60));
 
-            // format the time difference to minutes
-            let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+            let signal = '🔴';
+
+            // if hour is greater than 30, then add the crystal mine location to the message
+            if (hours >= 40) {
+                signal = '🟢';
+            } else if (hours >= 30) {
+                signal = '🟡';
+            } else if (hours >= 20) {
+                signal = '🟠';
+            }
 
             // append to messageToSend
-            messageToSend += goblinLocation !== undefined && `**X:** ${goblinLocation.location["X"]}, **Y:** ${goblinLocation.location["Y"]} | **Level:** ${goblinLocation.level}\n`;
+            messageToSend += goblinLocation !== undefined && `**X:** ${goblinLocation.location["X"]}, **Y:** ${goblinLocation.location["Y"]} | **Level:** ${goblinLocation.level} - (${hours} Hours Old) ${signal}\n`;
+
         })
 
         // check if messageToSend is not empty
@@ -129,14 +138,19 @@ client.on('messageCreate', message => {
             // format the time difference to hours
             let hours = Math.floor(timeDifference / (1000 * 60 * 60));
 
-            // format the time difference to minutes
-            let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+            let signal = '🔴';
 
             // if hour is greater than 30, then add the crystal mine location to the message
-            if (hours >= 30) {
-                // append to messageToSend
-                messageToSend += crystalMineLocation !== undefined && `**X:** ${crystalMineLocation.location["X"]}, **Y:** ${crystalMineLocation.location["Y"]} | **Level:** ${crystalMineLocation.level} - (${hours}H:${minutes}M)\n`;
+            if (hours >= 40) {
+                signal = '🟢';
+            } else if (hours >= 30) {
+                signal = '🟡';
+            } else if (hours >= 20) {
+                signal = '🟠';
             }
+
+            // append to messageToSend
+            messageToSend += crystalMineLocation !== undefined && `**X:** ${crystalMineLocation.location["X"]}, **Y:** ${crystalMineLocation.location["Y"]} | **Level:** ${crystalMineLocation.level} - (${hours} Hours Old) ${signal}\n`;
         })
 
         // check if messageToSend is not empty
@@ -180,14 +194,19 @@ client.on('messageCreate', message => {
             // format the time difference to hours
             let hours = Math.floor(timeDifference / (1000 * 60 * 60));
 
-            // format the time difference to minutes
-            let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+            let signal = '🔴';
 
             // if hour is greater than 30, then add the crystal mine location to the message
-            if (hours >= 30) {
-                // append to messageToSend
-                messageToSend += crystalMineLocation !== undefined && `**X:** ${crystalMineLocation.location["X"]}, **Y:** ${crystalMineLocation.location["Y"]} | **Level:** ${crystalMineLocation.level} - (${hours}H:${minutes}M)\n`;
+            if (hours >= 40) {
+                signal = '🟢';
+            } else if (hours >= 30) {
+                signal = '🟡';
+            } else if (hours >= 20) {
+                signal = '🟠';
             }
+
+            // append to messageToSend
+            messageToSend += crystalMineLocation !== undefined && `**X:** ${crystalMineLocation.location["X"]}, **Y:** ${crystalMineLocation.location["Y"]} | **Level:** ${crystalMineLocation.level} - (${hours} Hours Old) ${signal}\n`;
         })
 
         // check if messageToSend is not empty
@@ -320,20 +339,8 @@ function startWebsocket() {
             return hours >= 30;
         });
 
-        // remove objects from goblinLocations which has remaining hours less than 30
-        goblinLocations = goblinLocations.filter(goblinLocation => {
-            let now = new Date().getTime();
-            let goblinExpiresData = goblinLocation.expires;
-
-            // get the time difference between now and the goblin location expires time
-            let timeDifference = goblinExpiresData.getTime() - now;
-
-            // format the time difference to hours
-            let hours = Math.floor(timeDifference / (1000 * 60 * 60));
-
-            // remove the goblin location if hours is less than 30
-            return hours >= 30;
-        });
+        // remove all objects from goblinLocations
+        goblinLocations = [];
 
         let randomTime = Math.floor(Math.random() * 1000) + 5000;
 
