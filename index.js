@@ -272,17 +272,28 @@ function authentication() {
     ).then(response => {
 
         // Validate if the user is authenticated by checking token
-        if (response.data.token) {
+        if (response && response.data && response.data.token) {
+
+            client.channels.cache.get(process.env.CHANNEL_ID).send('```ini\n[Authenticated with LoK 🔑]\n```');
+
             // Save the token in the ACCESS_TOKEN variable 
             ACCESS_TOKEN = response.data.token;
 
+            // Start websocket connection
             startWebsocket();
 
-            return true;
+            // Exit the function
+            return;
         }
 
-        return authentication();
+        // If the user is not authenticated, then restart authentication() and send message to discord
+        client.channels.cache.get(process.env.CHANNEL_ID).send('```diff\n- Authentication Failed! ⚠️```');
 
+        // Pause the script for 1 minute
+        setTimeout(() => {
+            // Restart authentication()
+            authentication();
+        }, 60000);
     })
 
 }
@@ -634,9 +645,6 @@ function startWebsocket() {
 
 // client on ready
 client.on('ready', () => {
-
-    client.channels.cache.get(process.env.CHANNEL_ID).send(`Logged in as ${process.env.BOT_NAME}!`);
-
     (async () => {
         try {
             authentication();
