@@ -15,6 +15,9 @@ const isJson = (str) => {
     return true;
 }
 
+// store gold mine locations in an array
+let goldMineLocations = [];
+
 // store crystal mine locations in an array
 let crystalMineLocations = [];
 
@@ -35,61 +38,29 @@ let endPosition = 0;
 let wsOpen = false;
 let ACCESS_TOKEN = '';
 
-// function to generate random string with min and max length
-function randomString(min, max) {
-    let result = '';
-    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let charactersLength = characters.length;
-    for (let i = 0; i < Math.floor(Math.random() * (max - min + 1) + min); i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
-
-// get goblin locations from user input and send to discord
-// user input format: /goblin level [level]
+// get gold mine locations from user input and send to discord
+// user input format: /gold level [level]
 client.on('messageCreate', message => {
-    if (message.content.startsWith('/goblin level') && (message.channel.id === process.env.CHANNEL_ID)) {
+    if (message.content.startsWith('!gold level') && (message.channel.id === process.env.CHANNEL_ID)) {
         // get the level from the user input
         const level = message.content.split(' ')[2];
 
-        // get the crystal mine locations from goblinLocations
-        const filteredGoblinLocations = goblinLocations.filter(goblinLocation => goblinLocation.level === parseInt(level));
+        // get the gold mine locations from goldMineLocations
+        const filteredGoldMineLocations = goldMineLocations.filter(goldMineLocation => goldMineLocation.level === parseInt(level));
 
-        // sort the filtered crystal mine locations by expired time
-        filteredGoblinLocations.sort((a, b) => b.expires - a.expires);
+        // sort the filtered gold mine locations by expired time
+        filteredGoldMineLocations.sort((a, b) => b.expires - a.expires);
 
-        // sort the filtered crystal mine locations by level
-        filteredGoblinLocations.sort((a, b) => b.level - a.level);
+        // sort the filtered gold mine locations by level
+        filteredGoldMineLocations.sort((a, b) => b.level - a.level);
 
         let messageToSend = '';
 
-        // loop through filtered crystal mine locations
-        filteredGoblinLocations.forEach(goblinLocation => {
-            let now = new Date().getTime();
-            let goblinExpiresData = goblinLocation.expires;
-
-            // get the time difference between now and the crystal mine location expires time
-            let timeDifference = goblinExpiresData.getTime() - now;
-
-            // format the time difference to hours
-            let hours = Math.floor(timeDifference / (1000 * 60 * 60));
-
-            let signal = '🔴';
-
-            // if hour is greater than 30, then add the crystal mine location to the message
-            if (hours >= 40) {
-                signal = '🟢';
-            } else if (hours >= 30) {
-                signal = '🟡';
-            } else if (hours >= 20) {
-                signal = '🟠';
-            }
-
-            // append to messageToSend
-            messageToSend += goblinLocation !== undefined && `**X:** ${goblinLocation.location["X"]}, **Y:** ${goblinLocation.location["Y"]} | **Level:** ${goblinLocation.level} - (${hours}H Expiry) ${signal}\n`;
-
-        })
+        // loop through filtered gold mine locations and maximum 10 locations
+        for (let i = 0; i < filteredGoldMineLocations.length && i < 50; i++) {
+            const goldMineLocation = filteredGoldMineLocations[i];
+            messageToSend += `**X:** ${goldMineLocation.location["X"]}, **Y:** ${goldMineLocation.location["Y"]} | **Level:** ${goldMineLocation.level}\n`;
+        }
 
         // check if messageToSend is not empty
         if (messageToSend !== '') {
@@ -104,7 +75,7 @@ client.on('messageCreate', message => {
                 }
             }
         } else {
-            client.channels.cache.get(process.env.CHANNEL_ID).send('No goblin found for level ' + level);
+            client.channels.cache.get(process.env.CHANNEL_ID).send('No gold mine locations found for level ' + level);
         }
     }
 });
@@ -112,7 +83,7 @@ client.on('messageCreate', message => {
 // get crystal mine locations from user input and send to discord
 // user input format: /crystalmine level [level]
 client.on('messageCreate', message => {
-    if (message.content.startsWith('/cmine level') && (message.channel.id === process.env.CHANNEL_ID)) {
+    if (message.content.startsWith('!cmine level') && (message.channel.id === process.env.CHANNEL_ID)) {
         // get the level from the user input
         const level = message.content.split(' ')[2];
 
@@ -171,10 +142,73 @@ client.on('messageCreate', message => {
     }
 });
 
+// get goblin locations from user input and send to discord
+// user input format: /goblin level [level]
+client.on('messageCreate', message => {
+    if (message.content.startsWith('!goblin level') && (message.channel.id === process.env.CHANNEL_ID)) {
+        // get the level from the user input
+        const level = message.content.split(' ')[2];
+
+        // get the goblin locations from goblinLocations
+        const filteredGoblinLocations = goblinLocations.filter(goblinLocation => goblinLocation.level === parseInt(level));
+
+        // sort the filtered goblin locations by expired time
+        filteredGoblinLocations.sort((a, b) => b.expires - a.expires);
+
+        // sort the filtered goblin locations by level
+        filteredGoblinLocations.sort((a, b) => b.level - a.level);
+
+        let messageToSend = '';
+
+        // loop through filtered goblin locations
+        filteredGoblinLocations.forEach(goblinLocation => {
+            let now = new Date().getTime();
+            let goblinExpiresData = goblinLocation.expires;
+
+            // get the time difference between now and the crystal mine location expires time
+            let timeDifference = goblinExpiresData.getTime() - now;
+
+            // format the time difference to hours
+            let hours = Math.floor(timeDifference / (1000 * 60 * 60));
+
+            let signal = '🔴';
+
+            // if hour is greater than 30, then add the crystal mine location to the message
+            if (hours >= 40) {
+                signal = '🟢';
+            } else if (hours >= 30) {
+                signal = '🟡';
+            } else if (hours >= 20) {
+                signal = '🟠';
+            }
+
+            // append to messageToSend
+            messageToSend += goblinLocation !== undefined && `**X:** ${goblinLocation.location["X"]}, **Y:** ${goblinLocation.location["Y"]} | **Level:** ${goblinLocation.level} - (${hours}H Expiry) ${signal}\n`;
+
+        })
+
+        // check if messageToSend is not empty
+        if (messageToSend !== '') {
+            // send 5 lines at a time using '\n' as the delimiter
+            const lines = messageToSend.split('\n');
+            const chunk = 5;
+            for (let i = 0; i < lines.length; i += chunk) {
+                const temparray = lines.slice(i, i + chunk);
+                // check if the message is not empty
+                if (temparray.join('\n') !== '') {
+                    client.channels.cache.get(process.env.CHANNEL_ID).send(temparray.join('\n'));
+                }
+            }
+        } else {
+            client.channels.cache.get(process.env.CHANNEL_ID).send('No goblin found for level ' + level);
+        }
+    }
+});
+
 // get all crystal mine locations from user input and send to discord
 // user input format: /get all
 client.on('messageCreate', message => {
-    if (message.content.startsWith('/cmine all') && (message.channel.id === process.env.CHANNEL_ID)) {
+    if (message.content.startsWith('!cmine all') && (message.channel.id === process.env.CHANNEL_ID)) {
         let messageToSend = '';
 
         // sort the filtered crystal mine locations by expired time
@@ -274,7 +308,7 @@ function authentication() {
         // Validate if the user is authenticated by checking token
         if (response && response.data && response.data.token) {
 
-            client.channels.cache.get(process.env.CHANNEL_ID).send('```ini\n[Authenticated with LoK 🔑]\n```');
+            client.channels.cache.get(process.env.CHANNEL_ID).send('```ini\n[Now Searching Resources]\n```');
 
             // Save the token in the ACCESS_TOKEN variable 
             ACCESS_TOKEN = response.data.token;
@@ -287,7 +321,7 @@ function authentication() {
         }
 
         // If the user is not authenticated, then restart authentication() and send message to discord
-        client.channels.cache.get(process.env.CHANNEL_ID).send('```diff\n- Authentication Failed! ⚠️```');
+        client.channels.cache.get(process.env.CHANNEL_ID).send('```diff\n- Authentication Failed! Account banned. ⚠️```');
 
         // Pause the script for 1 minute
         setTimeout(() => {
@@ -317,7 +351,7 @@ function startWebsocket() {
             startPosition -= 8;
 
             // add delay of 1 second to prevent rate limiting
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 500));
         }
 
         // reset start position
@@ -332,6 +366,15 @@ function startWebsocket() {
     ws.on('open', async function open() {
         wsOpen = true;
 
+        // empty goldMineLocations array
+        goldMineLocations = [];
+
+        // empty crystalMineLocations array
+        crystalMineLocations = [];
+
+        // empty goblinLocations array
+        goblinLocations = [];
+
         search();
     });
 
@@ -340,28 +383,8 @@ function startWebsocket() {
         wsOpen = false;
         ws = null;
 
-        // remove objects from crystalMineLocations which has remaining hours less than 30
-        crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => {
-            let now = new Date().getTime();
-            let cmineExpiresData = crystalMineLocation.expires;
-
-            // get the time difference between now and the crystal mine location expires time
-            let timeDifference = cmineExpiresData.getTime() - now;
-
-            // format the time difference to hours
-            let hours = Math.floor(timeDifference / (1000 * 60 * 60));
-
-            // remove the crystal mine location if hours is less than 30
-            return hours >= 30;
-        });
-
-        // remove all objects from goblinLocations
-        goblinLocations = [];
-
-        let randomTime = Math.floor(Math.random() * 1000) + 5000;
-
-        // start websocket again
-        setTimeout(startWebsocket, randomTime)
+        // send message to discord channel informing that the search is complete
+        client.channels.cache.get(process.env.CHANNEL_ID).send('```ini\n[Search Complete 🎉]\n```');
     };
 
     ws.on('message', data => {
@@ -381,24 +404,19 @@ function startWebsocket() {
                 // loop through 'objects' array
                 parsedDataJson[1].objects.forEach(object => {
 
-                    /* returns =>
-                        {
-                        _id: '636f627ee9a37148b7d906af',
-                        loc: [ 18, 1785, 2045 ],
-                        level: 2,
-                        code: 20100101,
-                        param: { value: 100000 },
-                        state: 1,
-                        expired: '2022-11-14T01:43:23.048Z'
+                    // check if the object is a gold mine
+                    if (object.code === 20100104) {
+                        // if the object already exists in the goldMineLocations array and object is occupied, then remove it
+                        if (goldMineLocations.some(goldMineLocations => goldMineLocations.location["X"] === object.loc[1] && goldMineLocations.location["Y"] === object.loc[2] && object.occupied)) {
+                            // remove the object from the goldMineLocations array using the object _id and goldMineLocations id
+                            goldMineLocations = goldMineLocations.filter(goldMineLocation => goldMineLocation.id !== object._id);
                         }
-                    */
 
-                    // check if the object is a goblin level 1
-                    if (object.level === 1 && object.param && object.param.value === 500 && object.code === 20200104) {
-                        // if the object does not exist in the goblinLocations array, then add it
-                        if (!goblinLocations.some(goblinLocation => goblinLocation.location["X"] === object.loc[1] && goblinLocation.location["Y"] === object.loc[2])) {
-                            // add the object to the goblinLocations array
-                            goblinLocations.push({
+                        // if the object does not exist in the goldMineLocations array and object is not occupied, then add it
+                        if (!goldMineLocations.some(goldMineLocation => goldMineLocation.location["X"] === object.loc[1] && goldMineLocation.location["Y"] === object.loc[2]) && !object.occupied) {
+                            // add the object to the goldMineLocations array
+                            goldMineLocations.push({
+                                id: object._id,
                                 location: {
                                     "X": object.loc[1],
                                     "Y": object.loc[2]
@@ -409,8 +427,8 @@ function startWebsocket() {
                         }
                     }
 
-                    // check if the object is a crystal mine level 1
-                    if (object.level === 1 && object.param && object.param.value === 50) {
+                    // // check if the object is a crystal mine
+                    if (object.code === 20100105) {
                         // if the object already exists in the crystalMineLocations array and object is occupied, then remove it
                         if (crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && object.occupied)) {
                             // remove the object from the crystalMineLocations array using the object _id and crystalMineLocations id
@@ -432,196 +450,8 @@ function startWebsocket() {
                         }
                     }
 
-                    // check if the object is a goblin level 2
-                    if (object.level === 2 && object.param && object.param.value === 5000 && object.code === 20200104) {
-                        // if the object does not exist in the goblinLocations array, then add it
-                        if (!goblinLocations.some(goblinLocation => goblinLocation.location["X"] === object.loc[1] && goblinLocation.location["Y"] === object.loc[2])) {
-                            // add the object to the goblinLocations array
-                            goblinLocations.push({
-                                location: {
-                                    "X": object.loc[1],
-                                    "Y": object.loc[2]
-                                },
-                                level: object.level,
-                                expires: new Date(object.expired)
-                            });
-                        }
-                    }
-
-                    // // check if the object is a crystal mine level 2
-                    if (object.level === 2 && object.param && object.param.value === 100) {
-                        // if the object already exists in the crystalMineLocations array and object is occupied, then remove it
-                        if (crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && object.occupied)) {
-                            // remove the object from the crystalMineLocations array using the object _id and crystalMineLocations id
-                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.id !== object._id);
-                        }
-
-                        // if the object does not exist in the crystalMineLocations array and object is not occupied, then add it
-                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2]) && !object.occupied) {
-                            // add the object to the crystalMineLocations array
-                            crystalMineLocations.push({
-                                id: object._id,
-                                location: {
-                                    "X": object.loc[1],
-                                    "Y": object.loc[2]
-                                },
-                                level: object.level,
-                                expires: new Date(object.expired)
-                            });
-                        }
-                    }
-
-                    // check if the object is a goblin level 3
-                    if (object.level === 3 && object.param && object.param.value === 15000 && object.code === 20200104) {
-                        // if the object does not exist in the goblinLocations array, then add it
-                        if (!goblinLocations.some(goblinLocation => goblinLocation.location["X"] === object.loc[1] && goblinLocation.location["Y"] === object.loc[2])) {
-                            // add the object to the goblinLocations array
-                            goblinLocations.push({
-                                location: {
-                                    "X": object.loc[1],
-                                    "Y": object.loc[2]
-                                },
-                                level: object.level,
-                                expires: new Date(object.expired)
-                            });
-                        }
-                    }
-
-                    // // check if the object is a crystal mine level 3
-                    if (object.level === 3 && object.param && object.param.value === 200) {
-                        // if the object already exists in the crystalMineLocations array and object is occupied, then remove it
-                        if (crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && object.occupied)) {
-                            // remove the object from the crystalMineLocations array using the object _id and crystalMineLocations id
-                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.id !== object._id);
-                        }
-
-                        // if the object does not exist in the crystalMineLocations array and object is not occupied, then add it
-                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2]) && !object.occupied) {
-                            // add the object to the crystalMineLocations array
-                            crystalMineLocations.push({
-                                id: object._id,
-                                location: {
-                                    "X": object.loc[1],
-                                    "Y": object.loc[2]
-                                },
-                                level: object.level,
-                                expires: new Date(object.expired)
-                            });
-                        }
-                    }
-
-                    // check if the object is a goblin level 4
-                    if (object.level === 4 && object.param && object.param.value === 50000 && object.code === 20200104) {
-                        // if the object does not exist in the goblinLocations array, then add it
-                        if (!goblinLocations.some(goblinLocation => goblinLocation.location["X"] === object.loc[1] && goblinLocation.location["Y"] === object.loc[2])) {
-                            // add the object to the goblinLocations array
-                            goblinLocations.push({
-                                location: {
-                                    "X": object.loc[1],
-                                    "Y": object.loc[2]
-                                },
-                                level: object.level,
-                                expires: new Date(object.expired)
-                            });
-                        }
-                    }
-
-                    // // check if the object is a crystal mine level 4
-                    if (object.level === 4 && object.param && object.param.value === 300) {
-                        // if the object already exists in the crystalMineLocations array and object is occupied, then remove it
-                        if (crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && object.occupied)) {
-                            // remove the object from the crystalMineLocations array using the object _id and crystalMineLocations id
-                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.id !== object._id);
-                        }
-
-                        // if the object does not exist in the crystalMineLocations array and object is not occupied, then add it
-                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2]) && !object.occupied) {
-                            // add the object to the crystalMineLocations array
-                            crystalMineLocations.push({
-                                id: object._id,
-                                location: {
-                                    "X": object.loc[1],
-                                    "Y": object.loc[2]
-                                },
-                                level: object.level,
-                                expires: new Date(object.expired)
-                            });
-                        }
-                    }
-
-                    // check if the object is a goblin level 5
-                    if (object.level === 5 && object.param && object.param.value === 150000 && object.code === 20200104) {
-                        // if the object does not exist in the goblinLocations array, then add it
-                        if (!goblinLocations.some(goblinLocation => goblinLocation.location["X"] === object.loc[1] && goblinLocation.location["Y"] === object.loc[2])) {
-                            // add the object to the goblinLocations array
-                            goblinLocations.push({
-                                location: {
-                                    "X": object.loc[1],
-                                    "Y": object.loc[2]
-                                },
-                                level: object.level,
-                                expires: new Date(object.expired)
-                            });
-                        }
-                    }
-
-                    // // check if the object is a crystal mine level 5
-                    if (object.level === 5 && object.param && object.param.value === 600) {
-                        // if the object already exists in the crystalMineLocations array and object is occupied, then remove it
-                        if (crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && object.occupied)) {
-                            // remove the object from the crystalMineLocations array using the object _id and crystalMineLocations id
-                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.id !== object._id);
-                        }
-
-                        // if the object does not exist in the crystalMineLocations array and object is not occupied, then add it
-                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2]) && !object.occupied) {
-                            // add the object to the crystalMineLocations array
-                            crystalMineLocations.push({
-                                id: object._id,
-                                location: {
-                                    "X": object.loc[1],
-                                    "Y": object.loc[2]
-                                },
-                                level: object.level,
-                                expires: new Date(object.expired)
-                            });
-                        }
-                    }
-
-                    // check if the object is a goblin level 6
-                    if (object.level === 6 && object.param && object.param.value === 250000 && object.code === 20200104) {
-                        // if the object does not exist in the goblinLocations array, then add it
-                        if (!goblinLocations.some(goblinLocation => goblinLocation.location["X"] === object.loc[1] && goblinLocation.location["Y"] === object.loc[2])) {
-                            // add the object to the goblinLocations array
-                            goblinLocations.push({
-                                location: {
-                                    "X": object.loc[1],
-                                    "Y": object.loc[2]
-                                },
-                                level: object.level,
-                                expires: new Date(object.expired)
-                            });
-                        }
-                    }
-
-                    // check if the object is a goblin level 7
-                    if (object.level === 7 && object.param && object.param.value === 500000 && object.code === 20200104) {
-                        // if the object does not exist in the goblinLocations array, then add it
-                        if (!goblinLocations.some(goblinLocation => goblinLocation.location["X"] === object.loc[1] && goblinLocation.location["Y"] === object.loc[2])) {
-                            // add the object to the goblinLocations array
-                            goblinLocations.push({
-                                location: {
-                                    "X": object.loc[1],
-                                    "Y": object.loc[2]
-                                },
-                                level: object.level,
-                                expires: new Date(object.expired)
-                            });
-                        }
-                    }
-
-                    // check if the object is a goblin level 6
-                    if (object.level === 8 && object.param && object.param.value === 750000 && object.code === 20200104) {
+                    // check if the object is a goblin
+                    if (object.code === 20200104) {
                         // if the object does not exist in the goblinLocations array, then add it
                         if (!goblinLocations.some(goblinLocation => goblinLocation.location["X"] === object.loc[1] && goblinLocation.location["Y"] === object.loc[2])) {
                             // add the object to the goblinLocations array
@@ -645,19 +475,26 @@ function startWebsocket() {
 
 // client on ready
 client.on('ready', () => {
-    (async () => {
-        try {
+    client.channels.cache.get(process.env.CHANNEL_ID).send('```ini\n[Connected to Discord]\n```');
+});
+
+// search command
+client.on('messageCreate', async message => {
+    if (message.content === '!search' && (message.channel.id === process.env.CHANNEL_ID)) {
+        // check if wsOpen is false
+        if (!wsOpen) {
             authentication();
-        } catch (error) {
-            console.log(error);
+        } else {
+            // send message to discord channel informing that the search is already running
+            client.channels.cache.get(process.env.CHANNEL_ID).send('```ini\n[Search is already running 🤖]\n```');
         }
-    })();
+    }
 });
 
 // show help message
 client.on('messageCreate', message => {
-    if (message.content === '/help' && (message.channel.id === process.env.CHANNEL_ID)) {
-        client.channels.cache.get(process.env.CHANNEL_ID).send(`1. **/help** - Shows this message.\n2. **/cmine level [LEVEL]** - Fetches the crystal mines for the specified level.\n3. **/cmine all** - Fetches all crystal mines.\n4. **/goblin level [LEVEL]** - Fetches the goblins for the specified level.`);
+    if (message.content === '!help' && (message.channel.id === process.env.CHANNEL_ID)) {
+        client.channels.cache.get(process.env.CHANNEL_ID).send(`1. **!help** - Shows this message.\n2. **!cmine level [LEVEL]** - Fetches the crystal mines for the specified level.\n3. **!cmine all** - Fetches all crystal mines.\n4. **!goblin level [LEVEL]** - Fetches the goblins for the specified level.\n5. **!gold level [LEVEL]** - Fetches the gold mines for the specified level.\n6. **!search** - Searches for all the mines and goblins in the map.`);
     }
 });
 
