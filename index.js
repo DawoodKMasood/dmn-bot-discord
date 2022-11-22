@@ -37,6 +37,8 @@ let startPosition = 4095;
 let endPosition = 0;
 let wsOpen = false;
 let ACCESS_TOKEN = '';
+let ACCOUNT_ID = process.env.ACCOUNT_ID;
+let CONTINENT = process.env.CONTINENT;
 
 // get gold mine locations from user input and send to discord
 // user input format: /gold level [level]
@@ -332,6 +334,26 @@ function authentication() {
 
 }
 
+async function sendLocation(level, objectCode, continent, x, y) {
+    let headers = {
+        "accept": "*/*",
+        "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
+        "content-type": "application/x-www-form-urlencoded",
+        "sec-ch-ua": "\"Google Chrome\";v=\"107\", \"Chromium\";v=\"107\", \"Not=A?Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"macOS\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-site",
+        "x-access-token": ACCESS_TOKEN
+    };
+
+    axios.post('https://api-lok-live.leagueofkingdoms.com/api/chat/new',
+        `json=%7B%22chatChannel%22%3A3%2C%22chatType%22%3A2%2C%22text%22%3A%22Lv.${level}%3Ffo_${objectCode}%22%2C%22param%22%3A%7B%22loc%22%3A%5B${continent}%2C${x}%2C${y}%5D%7D%2C%22toId%22%3A%22${ACCOUNT_ID}%22%7D`,
+        { headers: headers }
+    )
+}
+
 function startWebsocket() {
 
     let ws = new WebSocket(process.env.WEBSOCKET_URL);
@@ -448,6 +470,8 @@ function startWebsocket() {
                                 expires: new Date(object.expired)
                             });
                         }
+
+                        sendLocation(object.level, object.code, CONTINENT, object.loc[1], object.loc[2]);
                     }
 
                     // check if the object is a goblin
