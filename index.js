@@ -457,9 +457,11 @@ function startWebsocket() {
                                 level: object.level,
                                 expires: new Date(object.expired)
                             });
+
+                            // send cmine location to master account
+                            sendLocation(object.level, object.code, CONTINENT, object.loc[1], object.loc[2]);
                         }
 
-                        sendLocation(object.level, object.code, CONTINENT, object.loc[1], object.loc[2]);
                     }
 
                     // check if the object is a goblin
