@@ -428,14 +428,8 @@ function startWebsocket() {
 
                     // check if the object is a gold mine
                     if (object.code === 20100104) {
-                        // if the object already exists in the goldMineLocations array and object is occupied, then remove it
-                        if (goldMineLocations.some(goldMineLocations => goldMineLocations.location["X"] === object.loc[1] && goldMineLocations.location["Y"] === object.loc[2] && object.occupied)) {
-                            // remove the object from the goldMineLocations array using the object _id and goldMineLocations id
-                            goldMineLocations = goldMineLocations.filter(goldMineLocation => goldMineLocation.id !== object._id);
-                        }
-
-                        // if the object does not exist in the goldMineLocations array and object is not occupied, then add it
-                        if (!goldMineLocations.some(goldMineLocation => goldMineLocation.location["X"] === object.loc[1] && goldMineLocation.location["Y"] === object.loc[2]) && !object.occupied) {
+                        // if the object is not occupied, then add it
+                        if (!object.occupied) {
                             // add the object to the goldMineLocations array
                             goldMineLocations.push({
                                 id: object._id,
@@ -451,14 +445,8 @@ function startWebsocket() {
 
                     // // check if the object is a crystal mine
                     if (object.code === 20100105) {
-                        // if the object already exists in the crystalMineLocations array and object is occupied, then remove it
-                        if (crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2] && object.occupied)) {
-                            // remove the object from the crystalMineLocations array using the object _id and crystalMineLocations id
-                            crystalMineLocations = crystalMineLocations.filter(crystalMineLocation => crystalMineLocation.id !== object._id);
-                        }
-
-                        // if the object does not exist in the crystalMineLocations array and object is not occupied, then add it
-                        if (!crystalMineLocations.some(crystalMineLocation => crystalMineLocation.location["X"] === object.loc[1] && crystalMineLocation.location["Y"] === object.loc[2]) && !object.occupied) {
+                        // if the object is not occupied, then add it
+                        if (!object.occupied) {
                             // add the object to the crystalMineLocations array
                             crystalMineLocations.push({
                                 id: object._id,
@@ -476,18 +464,14 @@ function startWebsocket() {
 
                     // check if the object is a goblin
                     if (object.code === 20200104) {
-                        // if the object does not exist in the goblinLocations array, then add it
-                        if (!goblinLocations.some(goblinLocation => goblinLocation.location["X"] === object.loc[1] && goblinLocation.location["Y"] === object.loc[2])) {
-                            // add the object to the goblinLocations array
-                            goblinLocations.push({
-                                location: {
-                                    "X": object.loc[1],
-                                    "Y": object.loc[2]
-                                },
-                                level: object.level,
-                                expires: new Date(object.expired)
-                            });
-                        }
+                        goblinLocations.push({
+                            location: {
+                                "X": object.loc[1],
+                                "Y": object.loc[2]
+                            },
+                            level: object.level,
+                            expires: new Date(object.expired)
+                        });
                     }
 
                 })
