@@ -460,8 +460,10 @@ function startWebsocket() {
 
                             // check if remaining expired time is greater than 35 hour
                             if (object.expired - Date.now() > 126000000) {
-                                // send cmine location to master account
-                                sendLocation(object.level, object.code, CONTINENT, object.loc[1], object.loc[2]);
+                                if (object.level === 2) {
+                                    // send cmine location to master account
+                                    sendLocation(object.level, object.code, CONTINENT, object.loc[1], object.loc[2]);
+                                }
                             }
                         }
 
