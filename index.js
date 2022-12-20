@@ -172,6 +172,9 @@ client.on('messageCreate', message => {
         // sort the filtered goblin locations by level
         filteredGoblinLocations.sort((a, b) => b.level - a.level);
 
+        // limit the number of goblin locations to 50
+        filteredGoblinLocations.length = 50;
+
         let messageToSend = '';
 
         // loop through filtered goblin locations
@@ -234,6 +237,9 @@ client.on('messageCreate', message => {
 
         // sort the filtered deathkar locations by level
         filteredDeathkarLocations.sort((a, b) => b.level - a.level);
+
+        // limit the filtered deathkar locations to 50
+        filteredDeathkarLocations.length = 50;
 
         let messageToSend = '';
 
@@ -298,6 +304,9 @@ client.on('messageCreate', message => {
         // sort the filtered orc locations by level
         filteredOrcLocations.sort((a, b) => b.level - a.level);
 
+        // limit the number of locations to 50
+        filteredOrcLocations.length = 50;
+
         let messageToSend = '';
 
         // loop through filtered orc locations
@@ -361,6 +370,9 @@ client.on('messageCreate', message => {
         // sort the filtered skeleton locations by level
         filteredSkeletonLocations.sort((a, b) => b.level - a.level);
 
+        // limit the filtered skeleton locations to 50
+        filteredSkeletonLocations.length = 50;
+
         let messageToSend = '';
 
         // loop through filtered skeleton locations
@@ -423,6 +435,9 @@ client.on('messageCreate', message => {
 
         // sort the filtered golem locations by level
         filteredGolemLocations.sort((a, b) => b.level - a.level);
+
+        // limit the filtered golem locations to 50
+        filteredGolemLocations.length = 50;
 
         let messageToSend = '';
 
