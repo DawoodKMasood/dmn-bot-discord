@@ -24,6 +24,18 @@ let crystalMineLocations = [];
 // store goblin locations in an array
 let goblinLocations = [];
 
+// store deathkar locations in an array
+let deathkarLocations = [];
+
+// store orc locations in an array
+let orcLocations = [];
+
+// store skeleton locations in an array
+let skeletonLocations = [];
+
+// store golem locations in an array
+let golemLocations = [];
+
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -207,6 +219,258 @@ client.on('messageCreate', message => {
     }
 });
 
+// get deathkar locations from user input and send to discord
+// user input format: /deathkar level [level]
+client.on('messageCreate', message => {
+    if (message.content.startsWith('!deathkar level') && (message.channel.id === process.env.CHANNEL_ID)) {
+        // get the level from the user input
+        const level = message.content.split(' ')[2];
+
+        // get the deathkar locations from deathkarLocations
+        const filteredDeathkarLocations = deathkarLocations.filter(deathkarLocation => deathkarLocation.level === parseInt(level));
+
+        // sort the filtered deathkar locations by expired time
+        filteredDeathkarLocations.sort((a, b) => b.expires - a.expires);
+
+        // sort the filtered deathkar locations by level
+        filteredDeathkarLocations.sort((a, b) => b.level - a.level);
+
+        let messageToSend = '';
+
+        // loop through filtered deathkar locations
+        filteredDeathkarLocations.forEach(deathkarLocation => {
+            let now = new Date().getTime();
+            let deathkarExpiresData = deathkarLocation.expires;
+
+            // get the time difference between now and the crystal mine location expires time
+            let timeDifference = deathkarExpiresData.getTime() - now;
+
+            // format the time difference to hours
+            let hours = Math.floor(timeDifference / (1000 * 60 * 60));
+
+            let signal = '🔴';
+
+            // if hour is greater than 30, then add the crystal mine location to the
+            if (hours >= 40) {
+                signal = '🟢';
+            } else if (hours >= 30) {
+                signal = '🟡';
+            } else if (hours >= 20) {
+                signal = '🟠';
+            }
+
+            // append to messageToSend
+            messageToSend += deathkarLocation !== undefined && `**X:** ${deathkarLocation.location["X"]}, **Y:** ${deathkarLocation.location["Y"]} | **Level:** ${deathkarLocation.level} - (${hours}H Expiry) ${signal}\n`;
+
+        })
+
+        // check if messageToSend is not empty
+        if (messageToSend !== '') {
+            // send 5 lines at a time using '\n' as the delimiter
+            const lines = messageToSend.split('\n');
+            const chunk = 5;
+            for (let i = 0; i < lines.length; i += chunk) {
+                const temparray = lines.slice(i, i + chunk);
+                // check if the message is not empty
+                if (temparray.join('\n') !== '') {
+                    client.channels.cache.get(process.env.CHANNEL_ID).send(temparray.join('\n'));
+                }
+            }
+        } else {
+            client.channels.cache.get(process.env.CHANNEL_ID).send('No deathkar found for level ' + level);
+        }
+    }
+});
+
+// get orc locations from user input and send to discord
+// user input format: /orc level [level]
+client.on('messageCreate', message => {
+    if (message.content.startsWith('!orc level') && (message.channel.id === process.env.CHANNEL_ID)) {
+        // get the level from the user input
+        const level = message.content.split(' ')[2];
+
+        // get the orc locations from orcLocations
+        const filteredOrcLocations = orcLocations.filter(orcLocation => orcLocation.level === parseInt(level));
+
+        // sort the filtered orc locations by expired time
+        filteredOrcLocations.sort((a, b) => b.expires - a.expires);
+
+        // sort the filtered orc locations by level
+        filteredOrcLocations.sort((a, b) => b.level - a.level);
+
+        let messageToSend = '';
+
+        // loop through filtered orc locations
+        filteredOrcLocations.forEach(orcLocation => {
+            let now = new Date().getTime();
+            let orcExpiresData = orcLocation.expires;
+
+            // get the time difference between now and the crystal mine location expires time
+            let timeDifference = orcExpiresData.getTime() - now;
+
+            // format the time difference to hours
+            let hours = Math.floor(timeDifference / (1000 * 60 * 60));
+
+            let signal = '🔴';
+
+            // if hour is greater than 30, then add the crystal mine location to the
+            if (hours >= 40) {
+                signal = '🟢';
+            } else if (hours >= 30) {
+                signal = '🟡';
+            } else if (hours >= 20) {
+                signal = '🟠';
+            }
+
+            // append to messageToSend
+            messageToSend += orcLocation !== undefined && `**X:** ${orcLocation.location["X"]}, **Y:** ${orcLocation.location["Y"]} | **Level:** ${orcLocation.level} - (${hours}H Expiry) ${signal}\n`;
+
+        })
+
+        // check if messageToSend is not empty
+        if (messageToSend !== '') {
+            // send 5 lines at a time using '\n' as the delimiter
+            const lines = messageToSend.split('\n');
+            const chunk = 5;
+            for (let i = 0; i < lines.length; i += chunk) {
+                const temparray = lines.slice(i, i + chunk);
+                // check if the message is not empty
+                if (temparray.join('\n') !== '') {
+                    client.channels.cache.get(process.env.CHANNEL_ID).send(temparray.join('\n'));
+                }
+            }
+        } else {
+            client.channels.cache.get(process.env.CHANNEL_ID).send('No orc found for level ' + level);
+        }
+    }
+});
+
+// get skeleton locations from user input and send to discord
+// user input format: /skeleton level [level]
+client.on('messageCreate', message => {
+    if (message.content.startsWith('!skeleton level') && (message.channel.id === process.env.CHANNEL_ID)) {
+        // get the level from the user input
+        const level = message.content.split(' ')[2];
+
+        // get the skeleton locations from skeletonLocations
+        const filteredSkeletonLocations = skeletonLocations.filter(skeletonLocation => skeletonLocation.level === parseInt(level));
+
+        // sort the filtered skeleton locations by expired time
+        filteredSkeletonLocations.sort((a, b) => b.expires - a.expires);
+
+        // sort the filtered skeleton locations by level
+        filteredSkeletonLocations.sort((a, b) => b.level - a.level);
+
+        let messageToSend = '';
+
+        // loop through filtered skeleton locations
+        filteredSkeletonLocations.forEach(skeletonLocation => {
+            let now = new Date().getTime();
+            let skeletonExpiresData = skeletonLocation.expires;
+
+            // get the time difference between now and the crystal mine location expires time
+            let timeDifference = skeletonExpiresData.getTime() - now;
+
+            // format the time difference to hours
+            let hours = Math.floor(timeDifference / (1000 * 60 * 60));
+
+            let signal = '🔴';
+
+            // if hour is greater than 30, then add the crystal mine location to the
+            if (hours >= 40) {
+                signal = '🟢';
+            } else if (hours >= 30) {
+                signal = '🟡';
+            } else if (hours >= 20) {
+                signal = '🟠';
+            }
+
+            // append to messageToSend
+            messageToSend += skeletonLocation !== undefined && `**X:** ${skeletonLocation.location["X"]}, **Y:** ${skeletonLocation.location["Y"]} | **Level:** ${skeletonLocation.level} - (${hours}H Expiry) ${signal}\n`;
+
+        })
+
+        // check if messageToSend is not empty
+        if (messageToSend !== '') {
+            // send 5 lines at a time using '\n' as the delimiter
+            const lines = messageToSend.split('\n');
+            const chunk = 5;
+            for (let i = 0; i < lines.length; i += chunk) {
+                const temparray = lines.slice(i, i + chunk);
+                // check if the message is not empty
+                if (temparray.join('\n') !== '') {
+                    client.channels.cache.get(process.env.CHANNEL_ID).send(temparray.join('\n'));
+                }
+            }
+        } else {
+            client.channels.cache.get(process.env.CHANNEL_ID).send('No skeleton found for level ' + level);
+        }
+    }
+});
+
+// get golem locations from user input and send to discord
+// user input format: /golem level [level]
+client.on('messageCreate', message => {
+    if (message.content.startsWith('!golem level') && (message.channel.id === process.env.CHANNEL_ID)) {
+        // get the level from the user input
+        const level = message.content.split(' ')[2];
+
+        // get the golem locations from golemLocations
+        const filteredGolemLocations = golemLocations.filter(golemLocation => golemLocation.level === parseInt(level));
+
+        // sort the filtered golem locations by expired time
+        filteredGolemLocations.sort((a, b) => b.expires - a.expires);
+
+        // sort the filtered golem locations by level
+        filteredGolemLocations.sort((a, b) => b.level - a.level);
+
+        let messageToSend = '';
+
+        // loop through filtered golem locations
+        filteredGolemLocations.forEach(golemLocation => {
+            let now = new Date().getTime();
+            let golemExpiresData = golemLocation.expires;
+
+            // get the time difference between now and the crystal mine location expires time
+            let timeDifference = golemExpiresData.getTime() - now;
+
+            // format the time difference to hours
+            let hours = Math.floor(timeDifference / (1000 * 60 * 60));
+
+            let signal = '🔴';
+
+            // if hour is greater than 30, then add the crystal mine location to the
+            if (hours >= 40) {
+                signal = '🟢';
+            } else if (hours >= 30) {
+                signal = '🟡';
+            } else if (hours >= 20) {
+                signal = '🟠';
+            }
+
+            // append to messageToSend
+            messageToSend += golemLocation !== undefined && `**X:** ${golemLocation.location["X"]}, **Y:** ${golemLocation.location["Y"]} | **Level:** ${golemLocation.level} - (${hours}H Expiry) ${signal}\n`;
+
+        })
+
+        // check if messageToSend is not empty
+        if (messageToSend !== '') {
+            // send 5 lines at a time using '\n' as the delimiter
+            const lines = messageToSend.split('\n');
+            const chunk = 5;
+            for (let i = 0; i < lines.length; i += chunk) {
+                const temparray = lines.slice(i, i + chunk);
+                // check if the message is not empty
+                if (temparray.join('\n') !== '') {
+                    client.channels.cache.get(process.env.CHANNEL_ID).send(temparray.join('\n'));
+                }
+            }
+        } else {
+            client.channels.cache.get(process.env.CHANNEL_ID).send('No golem found for level ' + level);
+        }
+    }
+});
+
 // get all crystal mine locations from user input and send to discord
 // user input format: /get all
 client.on('messageCreate', message => {
@@ -270,6 +534,42 @@ client.on('messageCreate', message => {
     if (message.content.startsWith('/goblin all') && (message.channel.id === process.env.CHANNEL_ID)) {
         // send message to discord
         client.channels.cache.get(process.env.CHANNEL_ID).send('To avoid spam, please use **/goblin level [LEVEL]** command!');
+    }
+});
+
+// get all deathkar locations from user input and send to discord
+// user input format: /deathkar all
+client.on('messageCreate', message => {
+    if (message.content.startsWith('/deathkar all') && (message.channel.id === process.env.CHANNEL_ID)) {
+        // send message to discord
+        client.channels.cache.get(process.env.CHANNEL_ID).send('To avoid spam, please use **/deathkar level [LEVEL]** command!');
+    }
+});
+
+// get all orc locations from user input and send to discord
+// user input format: /orc all
+client.on('messageCreate', message => {
+    if (message.content.startsWith('/orc all') && (message.channel.id === process.env.CHANNEL_ID)) {
+        // send message to discord
+        client.channels.cache.get(process.env.CHANNEL_ID).send('To avoid spam, please use **/orc level [LEVEL]** command!');
+    }
+});
+
+// get all skeleton locations from user input and send to discord
+// user input format: /skeleton all
+client.on('messageCreate', message => {
+    if (message.content.startsWith('/skeleton all') && (message.channel.id === process.env.CHANNEL_ID)) {
+        // send message to discord
+        client.channels.cache.get(process.env.CHANNEL_ID).send('To avoid spam, please use **/skeleton level [LEVEL]** command!');
+    }
+});
+
+// get all golem locations from user input and send to discord
+// user input format: /golem all
+client.on('messageCreate', message => {
+    if (message.content.startsWith('/golem all') && (message.channel.id === process.env.CHANNEL_ID)) {
+        // send message to discord
+        client.channels.cache.get(process.env.CHANNEL_ID).send('To avoid spam, please use **/golem level [LEVEL]** command!');
     }
 });
 
@@ -489,6 +789,54 @@ function startWebsocket() {
                         });
                     }
 
+                    // check if the object is a deathkar
+                    if (object.code === 20200201) {
+                        deathkarLocations.push({
+                            location: {
+                                "X": object.loc[1],
+                                "Y": object.loc[2]
+                            },
+                            level: object.level,
+                            expires: new Date(object.expired)
+                        });
+                    }
+
+                    // check if the object is an orc
+                    if (object.code === 20200101) {
+                        deathkarLocations.push({
+                            location: {
+                                "X": object.loc[1],
+                                "Y": object.loc[2]
+                            },
+                            level: object.level,
+                            expires: new Date(object.expired)
+                        });
+                    }
+
+                    // check if the object is a skeleton
+                    if (object.code === 20200102) {
+                        skeletonLocations.push({
+                            location: {
+                                "X": object.loc[1],
+                                "Y": object.loc[2]
+                            },
+                            level: object.level,
+                            expires: new Date(object.expired)
+                        });
+                    }
+
+                    // check if the object is a golem
+                    if (object.code === 20200103) {
+                        golemLocations.push({
+                            location: {
+                                "X": object.loc[1],
+                                "Y": object.loc[2]
+                            },
+                            level: object.level,
+                            expires: new Date(object.expired)
+                        });
+                    }
+
                 })
 
             }
@@ -517,7 +865,7 @@ client.on('messageCreate', async message => {
 // show help message
 client.on('messageCreate', message => {
     if (message.content === '!help' && (message.channel.id === process.env.CHANNEL_ID)) {
-        client.channels.cache.get(process.env.CHANNEL_ID).send(`1. **!help** - Shows this message.\n2. **!cmine level [LEVEL]** - Fetches the crystal mines for the specified level.\n3. **!cmine all** - Fetches all crystal mines.\n4. **!goblin level [LEVEL]** - Fetches the goblins for the specified level.\n5. **!gold level [LEVEL]** - Fetches the gold mines for the specified level.\n6. **!search** - Searches for all the mines and goblins in the map.`);
+        client.channels.cache.get(process.env.CHANNEL_ID).send(`1. **!help** - Shows this message.\n2. **!cmine level [LEVEL]** - Fetches the crystal mines for the specified level.\n3. **!cmine all** - Fetches all crystal mines.\n4. **!goblin level [LEVEL]** - Fetches the goblins for the specified level.\n5. **!deathkar level [LEVEL]** - Fetches the deathkar for the specified level.\n6. **!orc level [LEVEL]** - Fetches the orc for the specified level.\n7. **!skeleton level [LEVEL]** - Fetches the skeleton for the specified level.\n8. **!golem level [LEVEL]** - Fetches the golem for the specified level.\n9. **!gold level [LEVEL]** - Fetches the gold mines for the specified level.\n10. **!search** - Searches the map.`);
     }
 });
 
