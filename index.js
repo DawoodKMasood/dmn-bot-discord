@@ -629,11 +629,6 @@ function authentication() {
             // Save the token in the ACCESS_TOKEN variable 
             ACCESS_TOKEN = response.data.token;
 
-            axios.post('https://lok-api-live.leagueofkingdoms.com/api/kingdom/enter',
-                `json=S0w%3D`,
-                { headers: headers }
-            )
-
             // Start websocket connection
             startWebsocket();
 
@@ -670,12 +665,12 @@ async function sendLocation(level, objectCode, continent, x, y) {
     axios.post('https://api-lok-live.leagueofkingdoms.com/api/chat/channels',
         `json=%7B%7D`,
         { headers: headers }
-    )
+    );
 
     axios.post('https://api-lok-live.leagueofkingdoms.com/api/chat/new',
         `json%3D%7B%22chatChannel%22%3A2%2C%22chatType%22%3A2%2C%22text%22%3A%22Lv.${level}%3Ffo_${objectCode}%22%2C%22param%22%3A%7B%22loc%22%3A%5B${continent}%2C${x}%2C${y}%5D%7D%7D`,
         { headers: headers }
-    )
+    );
 }
 
 function startWebsocket() {
@@ -782,24 +777,24 @@ function startWebsocket() {
                                 expires: new Date(object.expired)
                             });
 
-                            // check if remaining expired time is greater than 40 hours
-                            if (new Date(object.expired) - Date.now() > 144000000) {
+                            // check if remaining expired time is greater than 35 hours
+                            if (new Date(object.expired) - Date.now() > 126000000) {
                                 if (object.level === 1) {
                                     // send cmine location to master account
                                     sendLocation(object.level, object.code, CONTINENT, object.loc[1], object.loc[2]);
                                 }
                             }
 
-                            // check if remaining expired time is greater than 40 hours
-                            if (new Date(object.expired) - Date.now() > 144000000) {
+                            // check if remaining expired time is greater than 35 hours
+                            if (new Date(object.expired) - Date.now() > 126000000) {
                                 if (object.level === 2) {
                                     // send cmine location to master account
                                     sendLocation(object.level, object.code, CONTINENT, object.loc[1], object.loc[2]);
                                 }
                             }
 
-                            // check if remaining expired time is greater than 40 hours
-                            if (new Date(object.expired) - Date.now() > 144000000) {
+                            // check if remaining expired time is greater than 35 hours
+                            if (new Date(object.expired) - Date.now() > 126000000) {
                                 if (object.level === 3) {
                                     // send cmine location to master account
                                     sendLocation(object.level, object.code, CONTINENT, object.loc[1], object.loc[2]);
