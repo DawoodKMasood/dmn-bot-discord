@@ -629,6 +629,11 @@ function authentication() {
             // Save the token in the ACCESS_TOKEN variable 
             ACCESS_TOKEN = response.data.token;
 
+            axios.post('https://lok-api-live.leagueofkingdoms.com/api/kingdom/enter',
+                `json=S0w%3D`,
+                { headers: headers }
+            )
+
             // Start websocket connection
             startWebsocket();
 
