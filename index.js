@@ -49,6 +49,10 @@ let startPosition = 4095;
 let endPosition = 0;
 let wsOpen = false;
 let ACCESS_TOKEN = '';
+let ACCOUNT_ID_1 = '61e0484f0d165f2c1969fb5c';
+let ACCOUNT_ID_2 = '62790152cb68926e9ebf8365';
+let ACCOUNT_ID_3 = '62ef390a6d2d331428646220';
+let ACCOUNT_ID_4 = '62f5bb23eee8291859cc0883';
 let CONTINENT = process.env.CONTINENT;
 
 // get gold mine locations from user input and send to discord
@@ -662,10 +666,23 @@ async function sendLocation(level, objectCode, continent, x, y) {
         "x-access-token": ACCESS_TOKEN
     };
 
-    // json=%7B%22chatChannel%22%3A2%2C%22chatType%22%3A2%2C%22text%22%3A%22Lv.2%3Ffo_20100101%22%2C%22param%22%3A%7B%22loc%22%3A%5B45%2C1596%2C1793%5D%7D%7D
+    axios.post('https://api-lok-live.leagueofkingdoms.com/api/chat/new',
+        `json=%7B%22chatChannel%22%3A3%2C%22chatType%22%3A2%2C%22text%22%3A%22Lv.${level}%3Ffo_${objectCode}%22%2C%22param%22%3A%7B%22loc%22%3A%5B${continent}%2C${x}%2C${y}%5D%7D%2C%22toId%22%3A%22${ACCOUNT_ID_1}%22%7D`,
+        { headers: headers }
+    )
 
     axios.post('https://api-lok-live.leagueofkingdoms.com/api/chat/new',
-        `json=%7B%22chatChannel%22%3A2%2C%22chatType%22%3A2%2C%22text%22%3A%22Lv.${level}%3Ffo_${objectCode}%2C%22param%22%3A%7B%22loc%22%3A%5B${continent}%2C${x}%2C${y}5D%7D%7D`,
+        `json=%7B%22chatChannel%22%3A3%2C%22chatType%22%3A2%2C%22text%22%3A%22Lv.${level}%3Ffo_${objectCode}%22%2C%22param%22%3A%7B%22loc%22%3A%5B${continent}%2C${x}%2C${y}%5D%7D%2C%22toId%22%3A%22${ACCOUNT_ID_2}%22%7D`,
+        { headers: headers }
+    )
+
+    axios.post('https://api-lok-live.leagueofkingdoms.com/api/chat/new',
+        `json=%7B%22chatChannel%22%3A3%2C%22chatType%22%3A2%2C%22text%22%3A%22Lv.${level}%3Ffo_${objectCode}%22%2C%22param%22%3A%7B%22loc%22%3A%5B${continent}%2C${x}%2C${y}%5D%7D%2C%22toId%22%3A%22${ACCOUNT_ID_3}%22%7D`,
+        { headers: headers }
+    )
+
+    axios.post('https://api-lok-live.leagueofkingdoms.com/api/chat/new',
+        `json=%7B%22chatChannel%22%3A3%2C%22chatType%22%3A2%2C%22text%22%3A%22Lv.${level}%3Ffo_${objectCode}%22%2C%22param%22%3A%7B%22loc%22%3A%5B${continent}%2C${x}%2C${y}%5D%7D%2C%22toId%22%3A%22${ACCOUNT_ID_4}%22%7D`,
         { headers: headers }
     )
 }
@@ -774,16 +791,16 @@ function startWebsocket() {
                                 expires: new Date(object.expired)
                             });
 
-                            // check if remaining expired time is greater than 40 hours
-                            if (new Date(object.expired) - Date.now() > 144000000) {
+                            // check if remaining expired time is greater than 35 hours
+                            if (new Date(object.expired) - Date.now() > 126000000) {
                                 if (object.level === 1) {
                                     // send cmine location to master account
                                     sendLocation(object.level, object.code, CONTINENT, object.loc[1], object.loc[2]);
                                 }
                             }
 
-                            // check if remaining expired time is greater than 40 hours
-                            if (new Date(object.expired) - Date.now() > 144000000) {
+                            // check if remaining expired time is greater than 35 hours
+                            if (new Date(object.expired) - Date.now() > 126000000) {
                                 if (object.level === 2) {
                                     // send cmine location to master account
                                     sendLocation(object.level, object.code, CONTINENT, object.loc[1], object.loc[2]);
