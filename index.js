@@ -3,6 +3,7 @@ dotenv.config()
 import { Client, GatewayIntentBits } from 'discord.js';
 import WebSocket from 'ws';
 // import axios
+import fetch from 'node-fetch'
 import axios from 'axios';
 
 // create isJson function to check if a string is a valid json
@@ -651,28 +652,27 @@ function authentication() {
 }
 
 async function sendLocation(level, objectCode, continent, x, y) {
-    let headers = {
-        "accept": "*/*",
-        "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
-        "content-type": "application/x-www-form-urlencoded",
-        "sec-ch-ua": "\"Google Chrome\";v=\"107\", \"Chromium\";v=\"107\", \"Not=A?Brand\";v=\"24\"",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"macOS\"",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-site",
-        "x-access-token": ACCESS_TOKEN
-    };
 
-    axios.post('https://api-lok-live.leagueofkingdoms.com/api/chat/new',
-        `json=%7B%22chatChannel%22%3A3%2C%22chatType%22%3A2%2C%22text%22%3A%22Lv.${level}%3Ffo_${objectCode}%22%2C%22param%22%3A%7B%22loc%22%3A%5B${continent}%2C${x}%2C${y}%5D%7D%2C%22toId%22%3A%22${ACCOUNT_ID_1}%22%7D`,
-        { headers: headers }
-    );
-
-    axios.post('https://api-lok-live.leagueofkingdoms.com/api/chat/new',
-        `json=%7B%22chatChannel%22%3A3%2C%22chatType%22%3A2%2C%22text%22%3A%22Lv.${level}%3Ffo_${objectCode}%22%2C%22param%22%3A%7B%22loc%22%3A%5B${continent}%2C${x}%2C${y}%5D%7D%2C%22toId%22%3A%22${ACCOUNT_ID_2}%22%7D`,
-        { headers: headers }
-    );
+    fetch("https://api-lok-live.leagueofkingdoms.com/api/chat/new", {
+        "headers": {
+            "accept": "*/*",
+            "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
+            "content-type": "application/x-www-form-urlencoded",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"8\", \"Chromium\";v=\"108\", \"Google Chrome\";v=\"108\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"macOS\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-site",
+            "x-access-token": ACCESS_TOKEN
+        },
+        "referrer": "https://play.leagueofkingdoms.com/",
+        "referrerPolicy": "strict-origin-when-cross-origin",
+        "body": "json=%7B%22chatChannel%22%3A2%2C%22chatType%22%3A2%2C%22text%22%3A%22Lv.1%3Ffo_20100105%22%2C%22param%22%3A%7B%22loc%22%3A%5B45%2C556%2C1211%5D%7D%7D",
+        "method": "POST",
+        "mode": "cors",
+        "credentials": "omit"
+    });
 }
 
 function startWebsocket() {
