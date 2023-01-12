@@ -49,6 +49,10 @@ let startPosition = 4095;
 let endPosition = 0;
 let wsOpen = false;
 let ACCESS_TOKEN = '';
+let ACCOUNT_ID_1 = '61e0484f0d165f2c1969fb5c';
+let ACCOUNT_ID_2 = '62790152cb68926e9ebf8365';
+let ACCOUNT_ID_3 = '62ef390a6d2d331428646220';
+let ACCOUNT_ID_4 = '62f5bb23eee8291859cc0883';
 let CONTINENT = process.env.CONTINENT;
 
 // get gold mine locations from user input and send to discord
@@ -629,31 +633,6 @@ function authentication() {
             // Save the token in the ACCESS_TOKEN variable 
             ACCESS_TOKEN = response.data.token;
 
-            axios.post('https://lok-api-live.leagueofkingdoms.com/api/kingdom/enter',
-                `json=S0w%3D`,
-                { headers: headers }
-            );
-
-            axios.post('https://api-lok-live.leagueofkingdoms.com/api/auth/setDeviceInfo',
-                `json=%7B%22deviceInfo%22%3A%7B%22OS%22%3A%22Mac%20OS%20X%2010_15_7%22%2C%22country%22%3A%22USA%22%2C%22language%22%3A%22English%22%2C%22bundle%22%3A%22%22%2C%22version%22%3A%221.1563.121.203%22%2C%22platform%22%3A%22web%22%2C%22pushId%22%3A%22532a61c8-2dd2-4ae0-823c-bf262c13aefe%22%2C%22build%22%3A%22global%22%7D%7D`,
-                { headers: headers }
-            );
-
-            axios.post('https://api-lok-live.leagueofkingdoms.com/api/kingdom/task/all',
-                `json=%7B%7D`,
-                { headers: headers }
-            );
-
-            axios.post('https://api-lok-live.leagueofkingdoms.com/api/alliance/info/my',
-                `json=%7B%7D`,
-                { headers: headers }
-            );
-
-            axios.post('https://api-lok-live.leagueofkingdoms.com/api/chat/channels',
-                `json=%7B%7D`,
-                { headers: headers }
-            );
-
             // Start websocket connection
             startWebsocket();
 
@@ -694,6 +673,11 @@ async function sendLocation(level, objectCode, continent, x, y) {
 
     axios.post('https://api-lok-live.leagueofkingdoms.com/api/chat/new',
         `json%3D%7B%22chatChannel%22%3A2%2C%22chatType%22%3A2%2C%22text%22%3A%22Lv.${level}%3Ffo_${objectCode}%22%2C%22param%22%3A%7B%22loc%22%3A%5B${continent}%2C${x}%2C${y}%5D%7D%7D`,
+        { headers: headers }
+    );
+
+    axios.post('https://api-lok-live.leagueofkingdoms.com/api/chat/new',
+        `json=%7B%22chatChannel%22%3A3%2C%22chatType%22%3A2%2C%22text%22%3A%22Lv.${level}%3Ffo_${objectCode}%22%2C%22param%22%3A%7B%22loc%22%3A%5B${continent}%2C${x}%2C${y}%5D%7D%2C%22toId%22%3A%22${ACCOUNT_ID_1}%22%7D`,
         { headers: headers }
     );
 }
