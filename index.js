@@ -665,7 +665,7 @@ async function sendLocation(level, objectCode, continent, x, y) {
     // json=%7B%22chatChannel%22%3A2%2C%22chatType%22%3A2%2C%22text%22%3A%22Lv.2%3Ffo_20100101%22%2C%22param%22%3A%7B%22loc%22%3A%5B45%2C1596%2C1793%5D%7D%7D
 
     axios.post('https://api-lok-live.leagueofkingdoms.com/api/chat/new',
-        `json=%7B%22chatChannel%22%3A2%2C%22chatType%22%3A2%2C%22text%22%3A%22Lv.${level}%3Ffo_${objectCode}%2C%22param%22%3A%7B%22loc%22%3A%5B${continent}%2C${x}%2C${y}5D%7D%7D`,
+        `json=%7B%22chatChannel%22%3A2%2C%22chatType%22%3A2%2C%22text%22%3A%22Lv.${level}%3Ffo_${objectCode}%2C%22param%22%3A%7B%22loc%22%3A%5B${continent}%2C${x}%2C${y}%5D%7D%7D`,
         { headers: headers }
     )
 }
