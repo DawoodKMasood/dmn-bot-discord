@@ -662,6 +662,11 @@ async function sendLocation(level, objectCode, continent, x, y) {
         "x-access-token": ACCESS_TOKEN
     };
 
+    axios.post('https://api-lok-live.leagueofkingdoms.com/api/chat/channels',
+        `json=%7B%7D`,
+        { headers: headers }
+    )
+
     axios.post('https://api-lok-live.leagueofkingdoms.com/api/chat/new',
         `json%3D%7B%22chatChannel%22%3A2%2C%22chatType%22%3A2%2C%22text%22%3A%22Lv.${level}%3Ffo_${objectCode}%22%2C%22param%22%3A%7B%22loc%22%3A%5B${continent}%2C${x}%2C${y}%5D%7D%7D`,
         { headers: headers }
